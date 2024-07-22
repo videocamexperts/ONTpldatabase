@@ -1,447 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ontario Stolen/Wanted Licence Plate Database</title>
+    <title>Plate Database</title>
     <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 600px;
-            margin: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #eaeaea;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        h1, h2 {
-            margin: 0;
-            color: #1e73be;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group input, 
-        .form-group select {
-            width: 85%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #1e73be;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #155a8a;
-        }
-
-        #export-button {
-            background-color: #28a745;
-        }
-
-        #export-button:hover {
-            background-color: #218838;
-        }
-
-        #delete-button {
-            background-color: #dc3545;
-        }
-
-        #delete-button:hover {
-            background-color: #c82333;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        ul li {
-            background: #f9f9f9;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .plate-checkbox {
-            margin-right: 10px;
-        }
-
-        .spacer {
-            margin-top: 30px;
-        }
-        
-        .remove-title {
-            color: #dc3545;
-        }
-        
-        .remove-button {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .remove-button:hover {
-            background-color: #c82333;
-        }
-
-    </style>
 </head>
 <body>
     <div class="container">
-	<img src="STLNWNTD.png" alt="Custom Plate Image">
-        <h1 class="header">
-            ONTARIO STOLEN/WANTED <br> LICENCE PLATE DATABASE
-            <button id="export-button">Export to Excel</button>
-        </h1>
-
-        <h2>ADD Licence Plate To Database</h2>
-        <form id="add-form">
+        <h1>Plate Database</h1>
+        <form id="plate-form">
             <div class="form-group">
-                <input type="text" id="plate" name="plate" onkeydown="preventSpaces(event)" placeholder="ENTER LICENCE PLATE NUMBER" required="">
+                <label for="plate">Enter Plate:</label>
+                <input type="text" id="plate" name="plate" required>
             </div>
-            <div class="form-group">
-                <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required="">
-            </div>
-		<style>
-    select {
-        -webkit-appearance: menulist-button; /* To disable platform-native styling */
-        color: black;
-    }
-    select:invalid {
-        color: grey;
-    }
-	</style>
-		<div class="form-group">
-                <label for="datestolen">DATE WHEN PLATE WAS STOLEN:<input type="date" id="datestolen" name="datestolen" required=""></label>
-            </div>
-            <div class="form-group">
-                <select name="police-department" id="department" required="">
-                    <option value="">SELECT POLICE SERVICE</option>
-                    <option value="Anishinabek PS">Anishinabek Police Service</option>
-                    <option value="Barrie PS">Barrie Police Service</option>
-                    <option value="Belleville PS">Belleville Police Service</option>
-                    <option value="Brantford PS">Brantford Police Service</option>
-                    <option value="Brockville PS">Brockville Police Service</option>
-                    <option value="Cobourg PS">Cobourg Police Service</option>
-                    <option value="Cornwall PS">Cornwall Police Service</option>
-                    <option value="Deep River PS">Deep River Police Service</option>
-                    <option value="Dryden PS">Dryden Police Service</option>
-                    <option value="DRPS">Durham Regional Police Service</option>
-                    <option value="Gananoque PS">Gananoque Police Service</option>
-                    <option value="Greater Sudbury PS">Greater Sudbury Police Service</option>
-                    <option value="Guelph PS">Guelph Police Service</option>
-                    <option value="Halton Regional PS">Halton Regional Police Service</option>
-                    <option value="Hamilton PS">Hamilton Police Service</option>
-                    <option value="Hanover PS">Hanover Police Service</option>
-                    <option value="Kawartha Lakes PS">Kawartha Lakes Police Service</option>
-                    <option value="Kingston PS">Kingston Police Service</option>
-                    <option value="Lac Seul PS">Lac Seul Police Service</option>
-                    <option value="LaSalle PS">LaSalle Police Service</option>
-                    <option value="London PS">London Police Service</option>
-                    <option value="Midland PS">Midland Police Service</option>
-                    <option value="Nishnawbe-Aski PS">Nishnawbe-Aski Police Service</option>
-                    <option value="NRPS">Niagara Regional Police Service</option>
-                    <option value="North Bay PS">North Bay Police Service</option>
-                    <option value="OPP">Ontario Provincial Police</option>
-                    <option value="Orangeville PS">Orangeville Police Service</option>
-                    <option value="Ottawa PS">Ottawa Police Service</option>
-                    <option value="Owen Sound PS">Owen Sound Police Service</option>
-                    <option value="PRPS">Peel Regional Police Service</option>
-                    <option value="Pembroke PS">Pembroke Police Service</option>
-                    <option value="Perth PS">Perth Police Service</option>
-                    <option value="Peterborough PS">Peterborough Police Service</option>
-                    <option value="PHPS">Port Hope Police Service</option>
-                    <option value="Sarnia PS">Sarnia Police Service</option>
-                    <option value="Saugeen Shores PS">Saugeen Shores Police Service</option>
-                    <option value="Sault Ste. Marie PS">Sault Ste. Marie Police Service</option>
-                    <option value="Six Nations PS">Six Nations Police Service</option>
-                    <option value="Smiths Falls PS">Smiths Falls Police Service</option>
-                    <option value="South Simcoe PS">South Simcoe Police Service</option>
-                    <option value="St. Thomas PS">St. Thomas Police Service</option>
-                    <option value="Stratford PS">Stratford Police Service</option>
-                    <option value="Strathroy-Caradoc PS">Strathroy-Caradoc Police Service</option>
-                    <option value="Thunder Bay PS">Thunder Bay Police Service</option>
-                    <option value="Timmins PS">Timmins Police Service</option>
-                    <option value="TPS">Toronto Police Service</option>
-                    <option value="UCCM Anishnaabe PS">UCCM Anishnaabe Police Service</option>
-                    <option value="WRPS">Waterloo Regional Police Service</option>
-                    <option value="Wikwemikong PS">Wikwemikong Tribal Police Service</option>
-                    <option value="Windsor PS">Windsor Police Service</option>
-                    <option value="YRP">York Regional Police</option>
-                </select>
-            </div>
-	    <div class="form-group">
-                <input type="text" id="oic" name="oic" placeholder="ENTER PERSON TO NOTIFY - RANK NAME BADGE# OR N/A IF NO O.I.C." required="">
-            </div>
-	    <div class="form-group">
-                <input type="text" id="phone" name="phone" placeholder="ENTER PHONE NUMBER OR N/A IF NO O.I.C." required="">
-            </div>
-	    <div class="form-group">
-                <input type="text" id="email" name="email" placeholder="ENTER EMAIL OR N/A IF NO O.I.C." required="">
-            </div>
-            <div class="form-group">
-                <select name="plate-status" id="plate-status" required="">
-                    <option value="">REASON FOR INVESTIGATION</option>
-                    <option value="AMBR">Amber Alert</option>
-		    <option value="MSPR">Missing Person</option>
-		    <option value="MSPL">Missing Plate</option>		    
-		    <option value="STLN">Stolen Vehicle/Plate</option>
-		    <option value="VOI">Vehicle of Interest</option>
-		    <option value="WNTD">Wanted</option>
-		</select>
-            </div>
-	    <div class="form-group">
-                <select name="plate-action" id="plate-action" required="">
-                    <option value="">REQUESTED ACTION</option>
-		    <option value="ID">Attempt to ID Occupants - Do not divulge</option>
-                    <option value="STOP">Attempt to Locate & Stop</option>
-		    <option value="CALL">Call Before Taking Action</option>
-		    <option value="FLLW">Follow Only Do Not Stop</option>
-		    <option value="INFO">Plate Hit Information Only</option>		    
-		</select>
-            </div>
-	    <div class="form-group">
-                <select name="plate-attach" id="plate-attach" required="">
-                    <option value="">INDICATE IF THE PLATE IS ATTACHED TO A VEHICLE OR UNATTACHED</option>
-                    <option value="ATCH">Attached Plate</option>
-                    <option value="UNAT">Unattached Plate</option>
-                </select>
-            </div>
-	    <div class="form-group">
-                <select name="vehicle-make" id="vehicle-make" required="">
-                    <option value="">SELECT THE MAKE OF VEHICLE OR N/A IF UNATTACHED</option>
-			<option value="Not Applicable - Unattached">N/A</option>
-                        <option value="Acura">Acura</option>
-                        <option value="Alfa Romeo">Alfa Romeo</option>
-                        <option value="Audi">Audi</option>
-                        <option value="BMW">BMW</option>
-                        <option value="Buick">Buick</option>
-                        <option value="Cadillac">Cadillac</option>
-                        <option value="Chevrolet">Chevrolet</option>
-                        <option value="Chrysler">Chrysler</option>
-                        <option value="Dodge">Dodge</option>
-                        <option value="Fiat">Fiat</option>
-                        <option value="Ford">Ford</option>
-                        <option value="Genesis">Genesis</option>
-                        <option value="GMC">GMC</option>
-                        <option value="Honda">Honda</option>
-                        <option value="Hyundai">Hyundai</option>
-                        <option value="Infiniti">Infiniti</option>
-                        <option value="Jaguar">Jaguar</option>
-                        <option value="Jeep">Jeep</option>
-                        <option value="Kia">Kia</option>
-                        <option value="Land Rover">Land Rover</option>
-                        <option value="Lexus">Lexus</option>
-                        <option value="Lincoln">Lincoln</option>
-                        <option value="Maserati">Maserati</option>
-                        <option value="Mazda">Mazda</option>
-                        <option value="Mercedes-Benz">Mercedes-Benz</option>
-                        <option value="Mini">Mini</option>
-                        <option value="Mitsubishi">Mitsubishi</option>
-                        <option value="Nissan">Nissan</option>
-                        <option value="Porsche">Porsche</option>
-                        <option value="Ram">Ram</option>
-                        <option value="Subaru">Subaru</option>
-                        <option value="Tesla">Tesla</option>
-                        <option value="Toyota">Toyota</option>
-                        <option value="Volkswagen">Volkswagen</option>
-                        <option value="Volvo">Volvo</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <select name="vehicle-color" id="vehicle-color" required="">
-                    	<option value="">SELECT COLOUR OF VEHICLE OR N/A IF UNATTACHED</option>
-			<option value="Not Applicable - Unattached">N/A</option>
-                        <option value="Beige">Beige</option>
-                        <option value="Black">Black</option>
-                        <option value="Blue">Blue</option>
-                        <option value="Brown">Brown</option>
-                        <option value="Gold">Gold</option>
-                        <option value="Green">Green</option>
-                        <option value="Grey">Grey</option>
-                        <option value="Orange">Orange</option>
-                        <option value="Pink">Pink</option>
-                        <option value="Purple">Purple</option>
-                        <option value="Red">Red</option>
-                        <option value="Silver">Silver</option>
-                        <option value="White">White</option>
-                        <option value="Yellow">Yellow</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <select name="vehicle-type" id="vehicle-type" required="">
-		    <option value="">SELECT VEHICLE TYPE OR N/A IF UNATTACHED</option>
-		    <option value="Not Applicable - Unattached">N/A</option>
-                    <option value="Car4D">Car - Sedan</option>
-		    <option value="CarHB">Car - Hatchback</option>
-                    <option value="SUV">SUV</option>
-                    <option value="Truck">Pick-up Truck</option>
-                    <option value="Van">Van</option>
-                    <option value="Motorcycle">Motorcycle</option>
-		    <option value="Trailer">Utility Trailer</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <button type="submit">Add Licence Plate</button>
-            </div>
+            <button type="submit">Add to Database</button>
         </form>
-        <div class="spacer"></div>
-        <h2 class="remove-title">REMOVE Licence Plate From Database</h2>
-        <form id="remove-form">
-            <div class="form-group">
-                <input type="text" name="remove-plate" placeholder="ENTER LICENCE PLATE NUMBER TO BE REMOVED" required="">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="remove-button">Remove Licence Plate</button>
-            </div>
-        </form>
-        <div class="spacer"></div>
-        <h2>Recently Added Plates (Last 5)</h2>
-        <ul id="plate-list"></ul>
+    </div>
 
-        <div class="spacer"></div>
-        
-        <button id="delete-button">Delete Selected Plate</button>
-    </div>   
+    <script>
+        const API_KEY = 'AIzaSyD6VUgu1x4lQOXSThhlpV3WHYprmKRp65Q'; // Replace with your API key
+        const SPREADSHEET_ID = '1q1iVK77p0MMEMfmPhOTViPMi812Szdqi8qhYtWVlMxI'; // Replace with your Spreadsheet ID
+        const RANGE = 'Sheet1!A2:A'; // Adjust the range if needed
 
-<script>
-        const CLIENT_ID = '252691325629-fe2nv1q2bs6v9gvmb5olrvrnsctejv5a.apps.googleusercontent.com'; // Replace with your Client ID
-        const API_KEY = 'AIzaSyC3sEsmb97wC1ZtxyRylyP4EC2ldbB5KNU'; // Replace with your API key
-        const SPREADSHEET_ID = '1GHUd19sEJPX1rsGPozUgTFJKy8Z1Zu5rR2KuM8blgHU'; // Replace with your Spreadsheet ID
-        const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-        const SCOPES = "https://www.googleapis.com/auth/spreadsheets";
-
-        function initializeGapiClient(token) {
-            gapi.client.init({
-                apiKey: API_KEY,
-                discoveryDocs: DISCOVERY_DOCS,
-            }).then(() => {
-                gapi.client.setToken({ access_token: token });
-                document.getElementById('add-form').onsubmit = handleFormSubmit;
-                loadPlates();
-            }).catch((error) => {
-                console.error('Error initializing Google API client:', error);
-            });
-        }
-
-        function handleCredentialResponse(response) {
-            console.log('Credential Response:', response);
-            const token = response.credential;
-            localStorage.setItem('authToken', token);
-            gapi.load('client', () => initializeGapiClient(token));
-        }
-
-        function handleFormSubmit(event) {
+        document.getElementById('plate-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            const formData = {
-                plate: event.target.plate.value.trim(),
-                incident: event.target.incident.value.trim(),
-                date: event.target.datestolen.value.trim(),
-                department: event.target['police-department'].value.trim(),
-                oic: event.target.oic.value.trim(),
-                phone: event.target.phone.value.trim(),
-                email: event.target.email.value.trim(),
-                status: event.target['plate-status'].value.trim(),
-                action: event.target['plate-action'].value.trim(),
-                attachment: event.target['plate-attach'].value.trim(),
-                make: event.target['vehicle-make'].value.trim(),
-                color: event.target['vehicle-color'].value.trim(),
-                type: event.target['vehicle-type'].value.trim()
+            const plate = document.getElementById('plate').value.trim();
+            if (plate) {
+                addPlateToDatabase(plate);
+            }
+        });
+
+        function addPlateToDatabase(plate) {
+            const params = {
+                spreadsheetId: SPREADSHEET_ID,
+                range: RANGE,
+                valueInputOption: 'RAW',
+                insertDataOption: 'INSERT_ROWS',
+                key: API_KEY
             };
 
-            console.log('Form Data:', formData);
+            const valueRangeBody = {
+                "values": [
+                    [plate]
+                ]
+            };
 
-            const values = [Object.values(formData)];
-
-            gapi.client.sheets.spreadsheets.values.append({
-                spreadsheetId: SPREADSHEET_ID,
-                range: 'Sheet1!A2',
-                valueInputOption: 'RAW',
-                resource: { values: values }
-            }).then((response) => {
-                console.log('Data appended to Google Sheet:', response);
-                event.target.reset();
-                loadPlates();
-            }).catch((error) => {
-                console.error('Error appending data to Google Sheet:', error);
+            gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody).then(function(response) {
+                console.log('Plate added to Google Sheet:', response);
+                document.getElementById('plate-form').reset();
+            }, function(reason) {
+                console.error('Error: ' + reason.result.error.message);
             });
         }
 
-        function loadPlates() {
-            gapi.client.sheets.spreadsheets.values.get({
-                spreadsheetId: SPREADSHEET_ID,
-                range: 'Sheet1!A1:M6'
-            }).then((response) => {
-                console.log('Loaded Plates:', response);
-                const plates = response.result.values;
-                const plateList = document.getElementById('plate-list');
-                plateList.innerHTML = '';
-                plates.forEach((plate, index) => {
-                    if (index > 0) { // Skip the header row
-                        const li = document.createElement('li');
-                        li.innerHTML = `Plate: ${plate[0]}, Incident: ${plate[1]}, Department: ${plate[3]}, OIC: ${plate[4]}, Phone: ${plate[5]}, Email: ${plate[6]}, Status: ${plate[7]}, Action: ${plate[8]}, Attachment: ${plate[9]}, Make: ${plate[10] || 'N/A'}, Color: ${plate[11] || 'N/A'}, Type: ${plate[12] || 'N/A'}`;
-                        plateList.appendChild(li);
-                    }
-                });
-            }).catch((error) => {
-                console.error('Error loading data from Google Sheet:', error);
+        function initClient() {
+            gapi.client.init({
+                apiKey: API_KEY
+            }).then(function () {
+                console.log('GAPI client initialized.');
+            }, function(error) {
+                console.error('Error initializing GAPI client:', error);
             });
         }
 
-        window.onload = function () {
-            google.accounts.id.initialize({
-                client_id: CLIENT_ID,
-                callback: handleCredentialResponse,
-                auto_select: true
-            });
-            google.accounts.id.prompt();
-
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                gapi.load('client', () => initializeGapiClient(token));
-            }
-        };
+        gapi.load('client', initClient);
     </script>
 </body>
 </html>
