@@ -79,13 +79,21 @@
         #export-button:hover {
             background-color: #218838;
         }
-         
+
         #authorize-button {
-            background-color: #28a745;
+            background-color: #007bff;
         }
 
         #authorize-button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
+        }
+
+        #signout-button {
+            background-color: #ffc107;
+        }
+
+        #signout-button:hover {
+            background-color: #e0a800;
         }
 
         #delete-button {
@@ -139,8 +147,7 @@
             ONTARIO STOLEN/WANTED <br> LICENCE PLATE DATABASE
             <button id="export-button">Export to Excel</button>
             <button id="authorize-button">Authorize</button>
-        <button id="signout-button" style="display: none;">Sign Out</button>
-            
+            <button id="signout-button" style="display: none;">Sign Out</button>
         </h1>
 
         <h2>ADD Licence Plate To Database</h2>
@@ -355,9 +362,9 @@
     </div>   
 
 <script>
-        const CLIENT_ID = '252691325629-fe2nv1q2bs6v9gvmb5olrvrnsctejv5a.apps.googleusercontent.com'; // Replace with your Client ID
+        const CLIENT_ID = '985127607358-h7v88oa1u87e1gvaf2sgk387400i17v5.apps.googleusercontent.com'; // Replace with your Client ID
         const SCOPES = "https://www.googleapis.com/auth/spreadsheets";
-        const SPREADSHEET_ID = '1GHUd19sEJPX1rsGPozUgTFJKy8Z1Zu5rR2KuM8blgHU'; // Replace with your Spreadsheet ID
+        const SPREADSHEET_ID = '1q1iVK77p0MMEMfmPhOTViPMi812Szdqi8qhYtWVlMxI'; // Replace with your Spreadsheet ID
 
         let tokenClient;
         let gapiInited = false;
