@@ -367,7 +367,7 @@
         function handleCredentialResponse(response) {
             const token = response.credential;
             localStorage.setItem('authToken', token);
-            gapi.load('client:auth2', () => initializeGapiClient(token));
+            gapi.load('client', () => initializeGapiClient(token));
         }
 
         function handleFormSubmit(event) {
@@ -434,7 +434,7 @@
 
             const token = localStorage.getItem('authToken');
             if (token) {
-                gapi.load('client:auth2', () => initializeGapiClient(token));
+                gapi.load('client', () => initializeGapiClient(token));
             }
         };
     </script>
