@@ -366,7 +366,8 @@
 
         function handleCredentialResponse(response) {
             const token = response.credential;
-            initializeGapiClient(token);
+            localStorage.setItem('authToken', token);
+            gapi.load('client:auth2', () => initializeGapiClient(token));
         }
 
         function handleFormSubmit(event) {
@@ -427,9 +428,14 @@
             google.accounts.id.initialize({
                 client_id: CLIENT_ID,
                 callback: handleCredentialResponse,
-                scope: SCOPES,
+                auto_select: true
             });
             google.accounts.id.prompt();
+
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                gapi.load('client:auth2', () => initializeGapiClient(token));
+            }
         };
     </script>
 </body>
