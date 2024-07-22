@@ -130,8 +130,6 @@
         <h1 class="header">
             ONTARIO STOLEN/WANTED <br> LICENCE PLATE DATABASE
             <button id="export-button">Export to Excel</button>
-            <button id="authorize-button" style="display: none;">Authorize</button>
-            <button id="signout-button" style="display: none;">Sign Out</button>
         </h1>
 
         <h2>ADD Licence Plate To Database</h2>
@@ -355,9 +353,6 @@
         let gisInited = false;
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('authorize-button').onclick = handleAuthClick;
-            document.getElementById('signout-button').onclick = handleSignoutClick;
-
             gapi.load('client', initializeGapiClient);
             gisLoaded();
         });
@@ -410,11 +405,12 @@
         function handleSignoutClick() {
             const token = gapi.client.getToken();
             if (token !== null) {
-                google.accounts.oauth2.revoke(token.access_token);
-                gapi.client.setToken('');
-                document.getElementById('authorize-button').style.display = 'block';
-                document.getElementById('signout-button').style.display = 'none';
-                document.getElementById('add-form').style.display = 'none';
+                google.accounts.oauth2.revoke(token.access_token, () => {
+                    gapi.client.setToken('');
+                    document.getElementById('authorize-button').style.display = 'block';
+                    document.getElementById('signout-button').style.display = 'none';
+                    document.getElementById('add-form').style.display = 'none';
+                });
             }
         }
 
