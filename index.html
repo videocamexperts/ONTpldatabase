@@ -79,6 +79,13 @@
         #export-button:hover {
             background-color: #218838;
         }
+        #export-button {
+            background-color: #28a745;
+        }
+
+        #export-button:hover {
+            background-color: #218838;
+        }
 
         #delete-button {
             background-color: #dc3545;
@@ -130,9 +137,10 @@
         <h1 class="header">
             ONTARIO STOLEN/WANTED <br> LICENCE PLATE DATABASE
             <button id="export-button">Export to Excel</button>
+        <button id="authorize-button" style="display: none;">Authorize</button>
+        <button id="signout-button" style="display: none;">Sign Out</button>
         </h1>
-
-        <h2>ADD Licence Plate To Database</h2>
+            <h2>ADD Licence Plate To Database</h2>
         <form id="add-form">
             <div class="form-group">
                 <input type="text" id="plate" name="plate" onkeydown="preventSpaces(event)" placeholder="ENTER LICENCE PLATE NUMBER" required="">
