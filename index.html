@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plate Database</title>
     <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Plate Database</h1>
-        <form id="plate-form">
+        <button id="authorize-button" style="display: none;">Authorize</button>
+        <button id="signout-button" style="display: none;">Sign Out</button>
+        <form id="plate-form" style="display: none;">
             <div class="form-group">
                 <label for="plate">Enter Plate:</label>
                 <input type="text" id="plate" name="plate" required>
@@ -19,9 +22,75 @@
     </div>
 
     <script>
-        const API_KEY = 'AIzaSyD6VUgu1x4lQOXSThhlpV3WHYprmKRp65Q'; // Replace with your API key
+        const CLIENT_ID = '985127607358-h7v88oa1u87e1gvaf2sgk387400i17v5.apps.googleusercontent.com'; // Replace with your OAuth 2.0 Client ID
         const SPREADSHEET_ID = '1q1iVK77p0MMEMfmPhOTViPMi812Szdqi8qhYtWVlMxI'; // Replace with your Spreadsheet ID
-        const RANGE = 'Sheet1!A2:A'; // Adjust the range if needed
+        const SCOPES = "https://www.googleapis.com/auth/spreadsheets";
+
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+
+        document.getElementById('authorize-button').onclick = handleAuthClick;
+        document.getElementById('signout-button').onclick = handleSignoutClick;
+
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: '', // defined later
+            });
+            gisInited = true;
+            maybeEnableButtons();
+        }
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
+                document.getElementById('authorize-button').style.display = 'block';
+            }
+        }
+
+        function initializeGapiClient() {
+            gapi.client.init({
+                discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+            }).then(function () {
+                gapiInited = true;
+                maybeEnableButtons();
+            }, function(error) {
+                console.error('Error initializing GAPI client:', error);
+            });
+        }
+
+        function handleAuthClick() {
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    throw (resp);
+                }
+                document.getElementById('signout-button').style.display = 'block';
+                document.getElementById('plate-form').style.display = 'block';
+                document.getElementById('authorize-button').style.display = 'none';
+            };
+
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({prompt: 'consent'});
+            } else {
+                tokenClient.requestAccessToken({prompt: ''});
+            }
+        }
+
+        function handleSignoutClick() {
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                google.accounts.oauth2.revoke(token.access_token);
+                gapi.client.setToken('');
+                document.getElementById('authorize-button').style.display = 'block';
+                document.getElementById('signout-button').style.display = 'none';
+                document.getElementById('plate-form').style.display = 'none';
+            }
+        }
 
         document.getElementById('plate-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -31,13 +100,11 @@
             }
         });
 
-        function addPlateToDatabase(plate) {
+        async function addPlateToDatabase(plate) {
             const params = {
                 spreadsheetId: SPREADSHEET_ID,
-                range: RANGE,
+                range: 'Sheet1!A2:A',
                 valueInputOption: 'RAW',
-                insertDataOption: 'INSERT_ROWS',
-                key: API_KEY
             };
 
             const valueRangeBody = {
@@ -46,26 +113,17 @@
                 ]
             };
 
-            gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody).then(function(response) {
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
                 console.log('Plate added to Google Sheet:', response);
                 document.getElementById('plate-form').reset();
-            }, function(reason) {
-                console.error('Error: ' + reason.result.error.message);
-            });
+            } catch (error) {
+                console.error('Error:', error.result.error.message);
+            }
         }
 
-        function initClient() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
-            }).then(function () {
-                console.log('GAPI client initialized.');
-            }, function(error) {
-                console.error('Error initializing GAPI client:', error);
-            });
-        }
-
-        gapi.load('client', initClient);
+        gapi.load('client:auth2', gapiLoaded);
+        window.onload = gisLoaded;
     </script>
 </body>
 </html>
