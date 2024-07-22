@@ -365,6 +365,7 @@
         }
 
         function handleCredentialResponse(response) {
+            console.log('Credential Response:', response);
             const token = response.credential;
             localStorage.setItem('authToken', token);
             gapi.load('client', () => initializeGapiClient(token));
@@ -388,6 +389,8 @@
                 type: event.target['vehicle-type'].value.trim()
             };
 
+            console.log('Form Data:', formData);
+
             const values = [Object.values(formData)];
 
             gapi.client.sheets.spreadsheets.values.append({
@@ -409,6 +412,7 @@
                 spreadsheetId: SPREADSHEET_ID,
                 range: 'Sheet1!A1:M6'
             }).then((response) => {
+                console.log('Loaded Plates:', response);
                 const plates = response.result.values;
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
