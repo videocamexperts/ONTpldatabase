@@ -354,7 +354,7 @@
 
         window.addEventListener('load', () => {
             gapi.load('client', initializeGapiClient);
-            gisLoaded();
+            window.addEventListener('gsi-loaded', gisLoaded);
         });
 
         function gisLoaded() {
