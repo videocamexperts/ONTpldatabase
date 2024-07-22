@@ -352,12 +352,13 @@
         let gapiInited = false;
         let gisInited = false;
 
-        document.getElementById('authorize-button').onclick = handleAuthClick;
-        document.getElementById('signout-button').onclick = handleSignoutClick;
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('authorize-button').onclick = handleAuthClick;
+            document.getElementById('signout-button').onclick = handleSignoutClick;
 
-        function gapiLoaded() {
             gapi.load('client', initializeGapiClient);
-        }
+            gisLoaded();
+        });
 
         function gisLoaded() {
             tokenClient = google.accounts.oauth2.initTokenClient({
@@ -392,7 +393,7 @@
                     throw (resp);
                 }
                 document.getElementById('signout-button').style.display = 'block';
-                document.getElementById('plate-form').style.display = 'block';
+                document.getElementById('add-form').style.display = 'block';
                 document.getElementById('authorize-button').style.display = 'none';
                 loadPlates();
             };
@@ -411,7 +412,7 @@
                 gapi.client.setToken('');
                 document.getElementById('authorize-button').style.display = 'block';
                 document.getElementById('signout-button').style.display = 'none';
-                document.getElementById('plate-form').style.display = 'none';
+                document.getElementById('add-form').style.display = 'none';
             }
         }
 
@@ -481,9 +482,6 @@
             }
         }
 
-        gapi.load('client:auth2', gapiLoaded);
-        window.onload = gisLoaded;
-
         function preventSpaces(event) {
             if (event.key === ' ') {
                 event.preventDefault();
@@ -499,28 +497,28 @@
                 });
             }
 
-            const incidentInput = document.getElementsByName('incident')[0];
+            const incidentInput = document.getElementById('incident');
             if (incidentInput) {
                 incidentInput.addEventListener('input', () => {
                     incidentInput.value = incidentInput.value.toUpperCase();
                 });
             }
 
-            const oicInput = document.getElementsByName('oic')[0];
+            const oicInput = document.getElementById('oic');
             if (oicInput) {
                 oicInput.addEventListener('input', () => {
                     oicInput.value = oicInput.value.toUpperCase();
                 });
             }
 
-            const phoneInput = document.getElementsByName('phone')[0];
+            const phoneInput = document.getElementById('phone');
             if (phoneInput) {
                 phoneInput.addEventListener('input', () => {
                     phoneInput.value = phoneInput.value.toUpperCase();
                 });
             }
 
-            const emailInput = document.getElementsByName('email')[0];
+            const emailInput = document.getElementById('email');
             if (emailInput) {
                 emailInput.addEventListener('input', () => {
                     emailInput.value = emailInput.value.toUpperCase();
