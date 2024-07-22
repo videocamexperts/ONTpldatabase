@@ -130,8 +130,6 @@
         <h1 class="header">
             ONTARIO STOLEN/WANTED <br> LICENCE PLATE DATABASE
             <button id="export-button">Export to Excel</button>
-            <button id="authorize-button" style="display: none;">Authorize</button>
-        <button id="signout-button" style="display: none;">Sign Out</button>
         </h1>
 
         <h2>ADD Licence Plate To Database</h2>
@@ -354,14 +352,7 @@
         let gapiInited = false;
         let gisInited = false;
 
-        document.getElementById('authorize-button').onclick = handleAuthClick;
-        document.getElementById('signout-button').onclick = handleSignoutClick;
-
-        function gapiLoaded() {
-            gapi.load('client', initializeGapiClient);
-        }
-    
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('load', () => {
             gapi.load('client', initializeGapiClient);
             gisLoaded();
         });
