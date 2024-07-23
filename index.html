@@ -138,11 +138,6 @@
             background-color: #c82333;
         }
 
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
-
     </style>
 </head>
 <body>
@@ -341,9 +336,9 @@
                 </select>
             </div>
             <div class="button-group">
-                <button id="authorize-button">Authorize</button>
-                <button id="signout-button" style="display: none;">Sign Out</button>
-                <button type="submit" id="add-plate-button">Add Licence Plate</button>
+            <button id="authorize-button">Authorize</button>
+            <button id="signout-button" style="display: none;">Sign Out</button>
+            <button type="submit">Add Licence Plate</button>
             </div>
         </form>
         <div class="spacer"></div>
@@ -373,6 +368,7 @@
         let tokenClient;
         let gapiInited = false;
         let gisInited = false;
+        let existingPlates = [];
 
         function gisLoaded() {
             tokenClient = google.accounts.oauth2.initTokenClient({
@@ -399,6 +395,7 @@
             }).then(function () {
                 gapiInited = true;
                 maybeEnableButtons();
+                loadPlates();
             }, function(error) {
                 console.error('Error initializing GAPI client:', error);
             });
@@ -444,7 +441,7 @@
 
         document.getElementById('add-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            const plate = document.getElementById('plate').value.trim();
+            const plate = document.getElementById('plate').value.trim().toUpperCase();
             const incident = document.getElementById('incident').value.trim();
             const date = document.getElementById('datestolen').value.trim();
             const department = document.getElementById('department').value.trim();
@@ -457,9 +454,11 @@
             const make = document.getElementById('vehicle-make').value.trim();
             const color = document.getElementById('vehicle-color').value.trim();
             const type = document.getElementById('vehicle-type').value.trim();
-            
-            if (plate) {
+
+            if (plate && !existingPlates.includes(plate)) {
                 addPlateToDatabase({ plate, incident, date, department, oic, phone, email, status, action, attachment, make, color, type });
+            } else {
+                alert("Duplicate plate entry. Please enter a unique plate.");
             }
         });
 
@@ -490,16 +489,16 @@
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A1:M6'
+                    range: 'Sheet1!A2:A',
                 });
                 console.log('Loaded Plates:', response);
-                const plates = response.result.values;
+                existingPlates = response.result.values.flat();
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
-                plates.forEach((plate, index) => {
+                response.result.values.forEach((plate, index) => {
                     if (index > 0) { // Skip the header row
                         const li = document.createElement('li');
-                        li.innerHTML = `Plate: ${plate[0]}, Incident: ${plate[1]}, Department: ${plate[3]}, OIC: ${plate[4]}, Phone: ${plate[5]}, Email: ${plate[6]}, Status: ${plate[7]}, Action: ${plate[8]}, Attachment: ${plate[9]}, Make: ${plate[10] || 'N/A'}, Color: ${plate[11] || 'N/A'}, Type: ${plate[12] || 'N/A'}`;
+                        li.innerHTML = `Plate: ${plate[0]}`;
                         plateList.appendChild(li);
                     }
                 });
