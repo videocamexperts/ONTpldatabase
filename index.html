@@ -579,16 +579,13 @@
             } catch (error) {
                 console.error('Error removing plate from Google Sheet:', error);
             }
-        
+        }
+                                                                
         function preventSpaces(event) {
             if (event.key === ' ') {
                 event.preventDefault();
             }
         }
-
-        });
-
-        }  
     
         document.addEventListener('DOMContentLoaded', () => {
             const plateInput = document.getElementById('plate');
