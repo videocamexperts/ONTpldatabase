@@ -56,11 +56,17 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            font-family: inherit;
+            color: inherit;
             font-size: 14px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        ::placeholder {
+        .form-group select {
+            -webkit-appearance: menulist-button;
+            appearance: menulist-button;
+        }
+
+        .form-group select:invalid {
             color: grey;
         }
 
@@ -156,12 +162,6 @@
             gap: 10px;
         }
 
-        .form-group label {
-            display: block;
-            color: grey;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
     </style>
 </head>
 <body>
@@ -180,8 +180,7 @@
                 <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required="">
             </div>
             <div class="form-group">
-                <label for="datestolen">DATE WHEN PLATE OR VEHICLE WAS STOLEN</label>
-                <input type="date" id="datestolen" name="datestolen" required="">
+                <input type="date" id="datestolen" name="datestolen" required="" placeholder="DATE WHEN PLATE OR VEHICLE WAS STOLEN">
             </div>
             <div class="form-group">
                 <select name="police-department" id="department" required="">
@@ -240,16 +239,55 @@
                 </select>
             </div>
             <div class="form-group">
-                <select name="vehicle-year" id="vehicle-year" required="">
-                    <option value="">SELECT THE YEAR OF VEHICLE</option>
-                    <!-- Year options will be generated dynamically -->
+                <input type="text" id="oic" name="oic" placeholder="ENTER PERSON TO NOTIFY - RANK NAME BADGE# OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <input type="text" id="phone" name="phone" placeholder="ENTER PHONE NUMBER OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <input type="text" id="email" name="email" placeholder="ENTER EMAIL OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <select name="plate-status" id="plate-status" required="">
+                    <option value="">REASON FOR INVESTIGATION</option>
+                    <option value="AMBER">AMBER ALERT</option>
+                    <option value="MISSING PERSON">MISSING PERSON</option>
+                    <option value="MISSING PLATE">MISSING PLATE</option>		   
+                    <option value="STOLEN VEHICLE/PLATE">STOLEN VEHICLE/PLATE</option>
+                    <option value="VEHICLE OF INTEREST">VEHICLE OF INTEREST</option>
+                    <option value="WANTED">WANTED</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="plate-action" id="plate-action" required="">
+                    <option value="">REQUESTED ACTION</option>
+                    <option value="ATTEMPT TO ID OCCUPANTS - DO NOT DIVULGE">ATTEMPT TO ID OCCUPANTS - DO NOT DIVULGE</option>
+                    <option value="ATTEMPT TO LOCATE & STOP">ATTEMPT TO LOCATE & STOP</option>
+                    <option value="CALL BEFORE TAKING ACTION">CALL BEFORE TAKING ACTION</option>
+                    <option value="FOLLOW ONLY DO NOT STOP">FOLLOW ONLY DO NOT STOP</option>
+                    <option value="PLATE HIT INFORMATION ONLY">PLATE HIT INFORMATION ONLY</option>		    
                 </select>
             </div>
             <div class="form-group">
                 <select name="plate-attach" id="plate-attach" required="">
                     <option value="">INDICATE IF THE PLATE IS ATTACHED TO A VEHICLE OR UNATTACHED</option>
-                    <option value="ATCH">ATTACHED PLATE</option>
-                    <option value="UNAT">UNATTACHED PLATE</option>
+                    <option value="ATTACHED PLATE">ATTACHED PLATE</option>
+                    <option value="UNATTACHED PLATE">UNATTACHED PLATE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="vehicle-year" id="vehicle-year" required="">
+                    <option value="">SELECT THE YEAR OF VEHICLE</option>
+                    <script>
+                        const yearSelect = document.getElementById('vehicle-year');
+                        const currentYear = new Date().getFullYear();
+                        for (let year = 1990; year <= currentYear; year++) {
+                            const option = document.createElement('option');
+                            option.value = year;
+                            option.text = year;
+                            yearSelect.appendChild(option);
+                        }
+                    </script>
                 </select>
             </div>
             <div class="form-group">
@@ -317,35 +355,14 @@
                 <select name="vehicle-type" id="vehicle-type" required="">
                     <option value="">SELECT VEHICLE TYPE OR N/A IF UNATTACHED</option>
                     <option value="NOT APPLICABLE - UNATTACHED">N/A</option>
-                    <option value="CAR4D">CAR - SEDAN</option>
-                    <option value="CARHB">CAR - HATCHBACK</option>
+                    <option value="CAR - SEDAN">CAR - SEDAN</option>
+                    <option value="CAR - HATCHBACK">CAR - HATCHBACK</option>
                     <option value="SUV">SUV</option>
-                    <option value="TRUCK">PICK-UP TRUCK</option>
+                    <option value="PICK-UP TRUCK">PICK-UP TRUCK</option>
                     <option value="VAN">VAN</option>
                     <option value="MOTORCYCLE">MOTORCYCLE</option>
-                    <option value="TRAILER">UTILITY TRAILER</option>
+                    <option value="UTILITY TRAILER">UTILITY TRAILER</option>
                     <option value="OTHER">OTHER</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <select name="plate-status" id="plate-status" required="">
-                    <option value="">REASON FOR INVESTIGATION</option>
-                    <option value="AMBR">AMBER ALERT</option>
-                    <option value="MSPR">MISSING PERSON</option>
-                    <option value="MSPL">MISSING PLATE</option>		   
-                    <option value="STLN">STOLEN VEHICLE/PLATE</option>
-                    <option value="VOI">VEHICLE OF INTEREST</option>
-                    <option value="WNTD">WANTED</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <select name="plate-action" id="plate-action" required="">
-                    <option value="">REQUESTED ACTION</option>
-                    <option value="ID">ATTEMPT TO ID OCCUPANTS - DO NOT DIVULGE</option>
-                    <option value="STOP">ATTEMPT TO LOCATE & STOP</option>
-                    <option value="CALL">CALL BEFORE TAKING ACTION</option>
-                    <option value="FLLW">FOLLOW ONLY DO NOT STOP</option>
-                    <option value="INFO">PLATE HIT INFORMATION ONLY</option>		    
                 </select>
             </div>
             <div class="button-group">
@@ -443,8 +460,7 @@
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
                     document.getElementById('remove-plate-button').disabled = true;
-                    const plateList = document.getElementById('plate-list');
-                    plateList.innerHTML = '';
+                    document.getElementById('plate-list').innerHTML = '';
                 });
             }
         }
@@ -514,10 +530,10 @@
                 existingPlates = response.result.values.flat();
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
-                const plates = response.result.values.slice(-10).reverse();
-                plates.forEach((plate, index) => {
+                const plates = response.result.values.slice(1).reverse().slice(0, 10);
+                plates.forEach((plate) => {
                     const li = document.createElement('li');
-                    li.innerHTML = `Plate: ${plate[0]}, Date: ${plate[2]}`;
+                    li.innerHTML = `Plate: ${plate[0]}, Incident: ${plate[1]}, Date: ${plate[2]}, Department: ${plate[3]}, OIC: ${plate[4]}, Phone: ${plate[5]}, Email: ${plate[6]}, Status: ${plate[7]}, Action: ${plate[8]}, Attachment: ${plate[9]}, Year: ${plate[10]}, Make: ${plate[11]}, Color: ${plate[12]}, Type: ${plate[13]}`;
                     plateList.appendChild(li);
                 });
             } catch (error) {
@@ -527,40 +543,41 @@
 
         document.getElementById('remove-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const removePlate = document.getElementsByName('remove-plate')[0].value.trim().toUpperCase();
-            if (removePlate) {
-                try {
-                    const response = await gapi.client.sheets.spreadsheets.values.get({
+            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Sheet1!A2:N',
+                });
+
+                const rows = response.result.values;
+                const rowIndex = rows.findIndex(row => row[0] === plateToRemove);
+
+                if (rowIndex !== -1) {
+                    await gapi.client.sheets.spreadsheets.values.batchUpdate({
                         spreadsheetId: SPREADSHEET_ID,
-                        range: 'Sheet1!A2:A',
-                    });
-                    const rows = response.result.values;
-                    const rowIndex = rows.findIndex(row => row[0] === removePlate);
-                    if (rowIndex !== -1) {
-                        await gapi.client.sheets.spreadsheets.batchUpdate({
-                            spreadsheetId: SPREADSHEET_ID,
-                            resource: {
-                                requests: [{
-                                    deleteDimension: {
-                                        range: {
-                                            sheetId: 0,
-                                            dimension: 'ROWS',
-                                            startIndex: rowIndex + 1,
-                                            endIndex: rowIndex + 2,
-                                        }
+                        resource: {
+                            requests: [{
+                                deleteDimension: {
+                                    range: {
+                                        sheetId: 0,
+                                        dimension: "ROWS",
+                                        startIndex: rowIndex + 1,
+                                        endIndex: rowIndex + 2,
                                     }
-                                }]
-                            }
-                        });
-                        console.log('Plate removed from Google Sheet');
-                        document.getElementById('remove-form').reset();
-                        loadPlates();
-                    } else {
-                        alert("Plate not found.");
-                    }
-                } catch (error) {
-                    console.error('Error removing plate from Google Sheet:', error);
+                                }
+                            }]
+                        }
+                    });
+
+                    document.getElementById('remove-form').reset();
+                    loadPlates();
+                } else {
+                    alert("Plate not found.");
                 }
+            } catch (error) {
+                console.error('Error removing plate from Google Sheet:', error);
             }
         });
 
@@ -570,20 +587,7 @@
             }
         }
 
-        function populateVehicleYearOptions() {
-            const currentYear = new Date().getFullYear();
-            const yearSelect = document.getElementById('vehicle-year');
-            for (let year = 1990; year <= currentYear; year++) {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                yearSelect.appendChild(option);
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            populateVehicleYearOptions();
-
             const plateInput = document.getElementById('plate');
             if (plateInput) {
                 plateInput.addEventListener('keydown', preventSpaces);
