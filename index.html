@@ -49,13 +49,16 @@
         }
 
         .form-group input, 
-        .form-group select {
+        .form-group select, 
+        .form-group input[type="date"] {
             width: 85%;
             padding: 10px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
         }
 
         button {
@@ -167,15 +170,6 @@
             <div class="form-group">
                 <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required="">
             </div>
-            <style>
-                select {
-                    -webkit-appearance: menulist-button; /* To disable platform-native styling */
-                    color: black;
-                }
-                select:invalid {
-                    color: grey;
-                }
-            </style>
             <div class="form-group">
                 <label for="datestolen">DATE WHEN PLATE WAS STOLEN:<input type="date" id="datestolen" name="datestolen" required=""></label>
             </div>
@@ -364,7 +358,7 @@
             </div>
         </form>
         <div class="spacer"></div>
-        <h2>Recently Added Plates</h2>
+        <h2>Recently Added Plates (Last 10)</h2>
         <ul id="plate-list"></ul>
 
         <div class="spacer"></div>
@@ -442,14 +436,9 @@
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
                     document.getElementById('remove-plate-button').disabled = true;
-                    clearPlateList();
+                    document.getElementById('plate-list').innerHTML = '';
                 });
             }
-        }
-
-        function clearPlateList() {
-            const plateList = document.getElementById('plate-list');
-            plateList.innerHTML = '';
         }
 
         document.getElementById('authorize-button').addEventListener('click', handleAuthClick);
@@ -513,13 +502,13 @@
                     range: 'Sheet1!A2:M',
                 });
                 console.log('Loaded Plates:', response);
-                existingPlates = response.result.values.flat();
+                existingPlates = response.result.values.map(row => row[0]);
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
-                const plates = response.result.values.slice(-10).reverse(); // Get the last 10 entries and reverse the order
-                plates.forEach((plate) => {
+                const recentPlates = response.result.values.slice(-10).reverse();
+                recentPlates.forEach(plate => {
                     const li = document.createElement('li');
-                    li.innerHTML = `Plate: ${plate[0]}, Incident: ${plate[1]}, Department: ${plate[3]}, OIC: ${plate[4]}, Phone: ${plate[5]}, Email: ${plate[6]}, Status: ${plate[7]}, Action: ${plate[8]}, Attachment: ${plate[9]}, Make: ${plate[10] || 'N/A'}, Color: ${plate[11] || 'N/A'}, Type: ${plate[12] || 'N/A'}`;
+                    li.innerHTML = `Plate: ${plate[0]}`;
                     plateList.appendChild(li);
                 });
             } catch (error) {
@@ -529,47 +518,42 @@
 
         document.getElementById('remove-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            const removePlate = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
-            if (removePlate && existingPlates.includes(removePlate)) {
-                removePlateFromDatabase(removePlate);
-            } else {
-                alert("Plate not found. Please enter a valid plate number.");
+            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+            if (plateToRemove) {
+                removePlateFromDatabase(plateToRemove);
             }
         });
 
-        async function removePlateFromDatabase(plateNumber) {
+        async function removePlateFromDatabase(plate) {
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:A',
+                    range: 'Sheet1!A2:M',
                 });
-
                 const rows = response.result.values;
-                let rowIndex = -1;
-                rows.forEach((row, index) => {
-                    if (row[0] === plateNumber) {
-                        rowIndex = index + 2; // Adjust for header row and 1-based index
-                    }
-                });
-
-                if (rowIndex > -1) {
-                    await gapi.client.sheets.spreadsheets.batchUpdate({
+                const rowIndex = rows.findIndex(row => row[0] === plate);
+                if (rowIndex !== -1) {
+                    const deleteRequest = {
                         spreadsheetId: SPREADSHEET_ID,
-                        resource: {
-                            requests: [{
+                        requests: [
+                            {
                                 deleteDimension: {
                                     range: {
                                         sheetId: 0,
-                                        dimension: "ROWS",
-                                        startIndex: rowIndex - 1,
-                                        endIndex: rowIndex
-                                    }
-                                }
-                            }]
-                        }
-                    });
+                                        dimension: 'ROWS',
+                                        startIndex: rowIndex + 1,
+                                        endIndex: rowIndex + 2,
+                                    },
+                                },
+                            },
+                        ],
+                    };
+                    await gapi.client.sheets.spreadsheets.batchUpdate(deleteRequest);
+                    console.log('Plate removed from Google Sheet');
                     document.getElementById('remove-form').reset();
                     loadPlates();
+                } else {
+                    alert('Plate not found.');
                 }
             } catch (error) {
                 console.error('Error removing plate from Google Sheet:', error);
