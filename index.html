@@ -48,9 +48,8 @@
             margin-bottom: 15px;
         }
 
-        .form-group input, 
-        .form-group select, 
-        .form-group input[type="date"] {
+        .form-group input,
+        .form-group select {
             width: 85%;
             padding: 10px;
             margin-top: 5px;
@@ -58,7 +57,18 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
             color: #333;
+        }
+
+        .form-group input::placeholder,
+        .form-group select option[value=""] {
+            color: grey;
+        }
+
+        .form-group select {
+            -webkit-appearance: menulist-button;
+            appearance: menulist-button;
         }
 
         button {
@@ -69,6 +79,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-size: 16px;
         }
 
         button:hover {
@@ -127,11 +138,11 @@
         .spacer {
             margin-top: 30px;
         }
-        
+
         .remove-title {
             color: #dc3545;
         }
-        
+
         .remove-button {
             background-color: #dc3545;
             color: #fff;
@@ -170,6 +181,15 @@
             <div class="form-group">
                 <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required="">
             </div>
+            <style>
+                select {
+                    -webkit-appearance: menulist-button; /* To disable platform-native styling */
+                    color: black;
+                }
+                select:invalid {
+                    color: grey;
+                }
+            </style>
             <div class="form-group">
                 <label for="datestolen">DATE WHEN PLATE WAS STOLEN:<input type="date" id="datestolen" name="datestolen" required=""></label>
             </div>
@@ -358,11 +378,13 @@
             </div>
         </form>
         <div class="spacer"></div>
-        <h2>Recently Added Plates (Last 10)</h2>
+        <h2>Recently Added Plates</h2>
         <ul id="plate-list"></ul>
 
         <div class="spacer"></div>
-        
+
+    </div>   
+
 <script>
         const CLIENT_ID = '985127607358-h7v88oa1u87e1gvaf2sgk387400i17v5.apps.googleusercontent.com'; // Replace with your Client ID
         const SCOPES = "https://www.googleapis.com/auth/spreadsheets";
@@ -436,7 +458,7 @@
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
                     document.getElementById('remove-plate-button').disabled = true;
-                    document.getElementById('plate-list').innerHTML = '';
+                    document.getElementById('plate-list').innerHTML = ''; // Clear the plate list
                 });
             }
         }
@@ -499,28 +521,31 @@
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:M',
+                    range: 'Sheet1!A2:A',
                 });
                 console.log('Loaded Plates:', response);
-                existingPlates = response.result.values.map(row => row[0]);
+                existingPlates = response.result.values.flat();
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
-                const recentPlates = response.result.values.slice(-10).reverse();
-                recentPlates.forEach(plate => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `Plate: ${plate[0]}`;
-                    plateList.appendChild(li);
+                response.result.values.slice(-10).reverse().forEach((plate, index) => {
+                    if (index > 0) { // Skip the header row
+                        const li = document.createElement('li');
+                        li.innerHTML = `Plate: ${plate[0]}`;
+                        plateList.appendChild(li);
+                    }
                 });
             } catch (error) {
                 console.error('Error loading data from Google Sheet:', error);
             }
         }
 
-        document.getElementById('remove-form').addEventListener('submit', function(event) {
+        document.getElementById('remove-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
-            if (plateToRemove) {
-                removePlateFromDatabase(plateToRemove);
+            const removePlate = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+            if (removePlate) {
+                await removePlateFromDatabase(removePlate);
+                document.getElementById('remove-form').reset();
+                loadPlates();
             }
         });
 
@@ -528,32 +553,17 @@
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:M',
+                    range: 'Sheet1!A2:A',
                 });
                 const rows = response.result.values;
                 const rowIndex = rows.findIndex(row => row[0] === plate);
                 if (rowIndex !== -1) {
-                    const deleteRequest = {
+                    const deleteParams = {
                         spreadsheetId: SPREADSHEET_ID,
-                        requests: [
-                            {
-                                deleteDimension: {
-                                    range: {
-                                        sheetId: 0,
-                                        dimension: 'ROWS',
-                                        startIndex: rowIndex + 1,
-                                        endIndex: rowIndex + 2,
-                                    },
-                                },
-                            },
-                        ],
+                        range: `Sheet1!A${rowIndex + 2}:M${rowIndex + 2}`
                     };
-                    await gapi.client.sheets.spreadsheets.batchUpdate(deleteRequest);
-                    console.log('Plate removed from Google Sheet');
-                    document.getElementById('remove-form').reset();
-                    loadPlates();
-                } else {
-                    alert('Plate not found.');
+                    await gapi.client.sheets.spreadsheets.values.clear(deleteParams);
+                    console.log(`Plate ${plate} removed from Google Sheet`);
                 }
             } catch (error) {
                 console.error('Error removing plate from Google Sheet:', error);
