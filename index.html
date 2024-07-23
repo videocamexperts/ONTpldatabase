@@ -138,15 +138,12 @@
             background-color: #c82333;
         }
 
-        #add-plate-button:disabled {
+        #add-plate-button:disabled,
+        .remove-button:disabled {
             background-color: #d3d3d3;
             cursor: not-allowed;
         }
 
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
     </style>
 </head>
 <body>
@@ -357,7 +354,7 @@
                 <input type="text" name="remove-plate" placeholder="ENTER LICENCE PLATE NUMBER TO BE REMOVED" required="">
             </div>
             <div class="form-group">
-                <button type="submit" class="remove-button">Remove Licence Plate</button>
+                <button type="submit" class="remove-button" disabled>Remove Licence Plate</button>
             </div>
         </form>
         <div class="spacer"></div>
@@ -393,10 +390,12 @@
             const authorizeButton = document.getElementById('authorize-button');
             const signoutButton = document.getElementById('signout-button');
             const addPlateButton = document.getElementById('add-plate-button');
+            const removePlateButton = document.querySelector('.remove-button');
             
-            if (authorizeButton && signoutButton && addPlateButton && gapiInited && gisInited) {
+            if (authorizeButton && signoutButton && addPlateButton && removePlateButton && gapiInited && gisInited) {
                 authorizeButton.style.display = 'block';
                 addPlateButton.disabled = true;
+                removePlateButton.disabled = true;
             }
         }
 
@@ -420,6 +419,7 @@
                 document.getElementById('signout-button').style.display = 'block';
                 document.getElementById('authorize-button').style.display = 'none';
                 document.getElementById('add-plate-button').disabled = false;
+                document.querySelector('.remove-button').disabled = false;
                 loadPlates();
             };
 
@@ -438,6 +438,7 @@
                     document.getElementById('authorize-button').style.display = 'block';
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
+                    document.querySelector('.remove-button').disabled = true;
                 });
             }
         }
