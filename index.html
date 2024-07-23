@@ -541,45 +541,49 @@
             }
         }
 
-        document.getElementById('remove-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+       document.getElementById('remove-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
 
-            try {
-                const response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:N',
-                });
-
-                const rows = response.result.values;
-                const rowIndex = rows.findIndex(row => row[0] === plateToRemove);
-
-                if (rowIndex !== -1) {
-                    await gapi.client.sheets.spreadsheets.values.batchUpdate({
-                        spreadsheetId: SPREADSHEET_ID,
-                        resource: {
-                            requests: [{
-                                deleteDimension: {
-                                    range: {
-                                        sheetId: 0,
-                                        dimension: "ROWS",
-                                        startIndex: rowIndex + 1,
-                                        endIndex: rowIndex + 2,
-                                    }
-                                }
-                            }]
-                        }
-                    });
-
-                    document.getElementById('remove-form').reset();
-                    loadPlates();
-                } else {
-                    alert("Plate not found.");
-                }
-            } catch (error) {
-                console.error('Error removing plate from Google Sheet:', error);
-            }
+    try {
+        const response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: SPREADSHEET_ID,
+            range: 'Sheet1!A2:N',
         });
+
+        const rows = response.result.values;
+        const rowIndex = rows.findIndex(row => row[0] === plateToRemove);
+
+        if (rowIndex !== -1) {
+            console.log(`Plate found at row index: ${rowIndex}`);
+            await gapi.client.sheets.spreadsheets.values.batchUpdate({
+                spreadsheetId: SPREADSHEET_ID,
+                resource: {
+                    requests: [{
+                        deleteDimension: {
+                            range: {
+                                sheetId: 0,
+                                dimension: "ROWS",
+                                startIndex: rowIndex + 1, // Adding 1 to account for header row
+                                endIndex: rowIndex + 2,
+                            }
+                        }
+                    }]
+                }
+            });
+
+            document.getElementById('remove-form').reset();
+            loadPlates();
+            console.log(`Plate ${plateToRemove} removed successfully.`);
+        } else {
+            alert("Plate not found.");
+            console.log(`Plate ${plateToRemove} not found in the database.`);
+        }
+    } catch (error) {
+        console.error('Error removing plate from Google Sheet:', error);
+        alert('Error removing plate from database. Please try again.');
+    }
+});
 
         function preventSpaces(event) {
             if (event.key === ' ') {
