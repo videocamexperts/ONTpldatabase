@@ -138,15 +138,16 @@
             background-color: #c82333;
         }
 
-        #add-plate-button:disabled {
+        #add-plate-button:disabled,
+        #remove-plate-button:disabled {
             background-color: #d3d3d3;
             cursor: not-allowed;
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
             justify-content: flex-start;
+            gap: 10px;
         }
 
     </style>
@@ -359,7 +360,7 @@
                 <input type="text" name="remove-plate" placeholder="ENTER LICENCE PLATE NUMBER TO BE REMOVED" required="">
             </div>
             <div class="form-group">
-                <button type="submit" class="remove-button" disabled>Remove Licence Plate</button>
+                <button type="submit" class="remove-button" id="remove-plate-button" disabled>Remove Licence Plate</button>
             </div>
         </form>
         <div class="spacer"></div>
@@ -395,12 +396,12 @@
             const authorizeButton = document.getElementById('authorize-button');
             const signoutButton = document.getElementById('signout-button');
             const addPlateButton = document.getElementById('add-plate-button');
-            const removeButton = document.querySelector('.remove-button');
+            const removePlateButton = document.getElementById('remove-plate-button');
             
-            if (authorizeButton && signoutButton && addPlateButton && removeButton && gapiInited && gisInited) {
+            if (authorizeButton && signoutButton && addPlateButton && removePlateButton && gapiInited && gisInited) {
                 authorizeButton.style.display = 'block';
                 addPlateButton.disabled = true;
-                removeButton.disabled = true;
+                removePlateButton.disabled = true;
             }
         }
 
@@ -424,7 +425,7 @@
                 document.getElementById('signout-button').style.display = 'block';
                 document.getElementById('authorize-button').style.display = 'none';
                 document.getElementById('add-plate-button').disabled = false;
-                document.querySelector('.remove-button').disabled = false;
+                document.getElementById('remove-plate-button').disabled = false;
                 loadPlates();
             };
 
@@ -443,7 +444,7 @@
                     document.getElementById('authorize-button').style.display = 'block';
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
-                    document.querySelector('.remove-button').disabled = true;
+                    document.getElementById('remove-plate-button').disabled = true;
                 });
             }
         }
