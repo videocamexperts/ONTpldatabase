@@ -541,33 +541,21 @@
             }
         }
 
-        document.getElementById('remove-form').addEventListener('submit', function(event) {
+        document.getElementById('remove-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const removePlate = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
-            if (removePlate && existingPlates.includes(removePlate)) {
-                removePlateFromDatabase(removePlate);
-            } else {
-                alert("Plate not found. Please enter a valid plate number.");
-            }
-        });
+            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
 
-        async function removePlateFromDatabase(plateNumber) {
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:A',
+                    range: 'Sheet1!A2:N',
                 });
 
                 const rows = response.result.values;
-                let rowIndex = -1;
-                rows.forEach((row, index) => {
-                    if (row[0] === plateNumber) {
-                        rowIndex = index + 2; // Adjust for header row and 1-based index
-                    }
-                });
+                const rowIndex = rows.findIndex(row => row[0] === plateToRemove);
 
-                if (rowIndex > -1) {
-                    await gapi.client.sheets.spreadsheets.batchUpdate({
+                if (rowIndex !== -1) {
+                    await gapi.client.sheets.spreadsheets.values.batchUpdate({
                         spreadsheetId: SPREADSHEET_ID,
                         resource: {
                             requests: [{
@@ -575,21 +563,24 @@
                                     range: {
                                         sheetId: 0,
                                         dimension: "ROWS",
-                                        startIndex: rowIndex - 1,
-                                        endIndex: rowIndex
+                                        startIndex: rowIndex + 1,
+                                        endIndex: rowIndex + 2,
                                     }
                                 }
                             }]
                         }
                     });
+
                     document.getElementById('remove-form').reset();
                     loadPlates();
+                } else {
+                    alert("Plate not found.");
                 }
             } catch (error) {
                 console.error('Error removing plate from Google Sheet:', error);
             }
-        }
-    
+        });
+
         function preventSpaces(event) {
             if (event.key === ' ') {
                 event.preventDefault();
