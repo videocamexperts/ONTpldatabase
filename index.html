@@ -56,18 +56,12 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .form-group select {
+            font-size: 16px;
             color: grey;
         }
 
-        .form-group input::placeholder,
-        .form-group select:invalid {
-            color: grey;
+        .form-group select option {
+            color: black;
         }
 
         button {
@@ -78,7 +72,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         button:hover {
@@ -181,7 +175,9 @@
                 <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required="">
             </div>
             <div class="form-group">
-                <label for="datestolen" style="color: grey;">DATE WHEN PLATE WAS STOLEN:<input type="date" id="datestolen" name="datestolen" required="" placeholder="DATE WHEN PLATE WAS STOLEN"></label>
+                <select name="datestolen" id="datestolen" required="">
+                    <option value="">DATE WHEN PLATE OR VEHICLE WAS STOLEN</option>
+                </select>
             </div>
             <div class="form-group">
                 <select name="police-department" id="department" required="">
@@ -237,6 +233,36 @@
                     <option value="WIKWEMIKONG PS">WIKWEMIKONG TRIBAL POLICE SERVICE</option>
                     <option value="WINDSOR PS">WINDSOR POLICE SERVICE</option>
                     <option value="YRP">YORK REGIONAL POLICE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" id="oic" name="oic" placeholder="ENTER PERSON TO NOTIFY - RANK NAME BADGE# OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <input type="text" id="phone" name="phone" placeholder="ENTER PHONE NUMBER OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <input type="text" id="email" name="email" placeholder="ENTER EMAIL OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <select name="plate-status" id="plate-status" required="">
+                    <option value="">REASON FOR INVESTIGATION</option>
+                    <option value="AMBR">AMBER ALERT</option>
+                    <option value="MSPR">MISSING PERSON</option>
+                    <option value="MSPL">MISSING PLATE</option>		   
+                    <option value="STLN">STOLEN VEHICLE/PLATE</option>
+                    <option value="VOI">VEHICLE OF INTEREST</option>
+                    <option value="WNTD">WANTED</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="plate-action" id="plate-action" required="">
+                    <option value="">REQUESTED ACTION</option>
+                    <option value="ID">ATTEMPT TO ID OCCUPANTS - DO NOT DIVULGE</option>
+                    <option value="STOP">ATTEMPT TO LOCATE & STOP</option>
+                    <option value="CALL">CALL BEFORE TAKING ACTION</option>
+                    <option value="FLLW">FOLLOW ONLY DO NOT STOP</option>
+                    <option value="INFO">PLATE HIT INFORMATION ONLY</option>		    
                 </select>
             </div>
             <div class="form-group">
@@ -421,7 +447,7 @@
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
                     document.getElementById('remove-plate-button').disabled = true;
-                    document.getElementById('plate-list').innerHTML = ''; // Clear the plate list
+                    document.getElementById('plate-list').innerHTML = '';
                 });
             }
         }
@@ -488,13 +514,13 @@
                     range: 'Sheet1!A2:N',
                 });
                 console.log('Loaded Plates:', response);
-                existingPlates = response.result.values.map(row => row[0]);
+                existingPlates = response.result.values.flat();
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
-                const recentPlates = response.result.values.slice(-10).reverse();
-                recentPlates.forEach(plate => {
+                const recentPlates = response.result.values.slice(-10).reverse(); // Get the last 10 plates and reverse the order
+                recentPlates.forEach((plate) => {
                     const li = document.createElement('li');
-                    li.innerHTML = `Plate: ${plate[0]}, Year: ${plate[10]}`;
+                    li.innerHTML = `Plate: ${plate[0]}, Date: ${plate[2]}`;
                     plateList.appendChild(li);
                 });
             } catch (error) {
@@ -502,46 +528,43 @@
             }
         }
 
-        document.getElementById('remove-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
-            if (plateToRemove) {
-                removePlateFromDatabase(plateToRemove);
-            }
-        });
-
         async function removePlateFromDatabase(plate) {
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:N',
+                    range: 'Sheet1!A2:A',
                 });
-                const rows = response.result.values;
-                const rowIndex = rows.findIndex(row => row[0] === plate);
-                if (rowIndex !== -1) {
-                    const deleteResponse = await gapi.client.sheets.spreadsheets.batchUpdate({
+                const plates = response.result.values;
+                const rowIndex = plates.findIndex(row => row[0] === plate) + 2; // +2 because the sheet is 1-indexed and we have a header row
+                if (rowIndex > 1) {
+                    await gapi.client.sheets.spreadsheets.batchUpdate({
                         spreadsheetId: SPREADSHEET_ID,
                         requests: [{
                             deleteDimension: {
                                 range: {
-                                    sheetId: response.result.sheets[0].properties.sheetId,
-                                    dimension: "ROWS",
-                                    startIndex: rowIndex + 1,
-                                    endIndex: rowIndex + 2
+                                    sheetId: 0,
+                                    dimension: 'ROWS',
+                                    startIndex: rowIndex - 1, // 0-indexed
+                                    endIndex: rowIndex
                                 }
                             }
                         }]
                     });
-                    console.log('Plate removed from Google Sheet:', deleteResponse);
                     document.getElementById('remove-form').reset();
                     loadPlates();
-                } else {
-                    alert("Plate not found.");
                 }
             } catch (error) {
-                console.error('Error:', error.result.error.message);
+                console.error('Error removing plate from Google Sheet:', error);
             }
         }
+
+        document.getElementById('remove-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const plate = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+            if (plate) {
+                removePlateFromDatabase(plate);
+            }
+        });
 
         function preventSpaces(event) {
             if (event.key === ' ') {
@@ -549,7 +572,34 @@
             }
         }
 
+        function populateVehicleYearDropdown() {
+            const currentYear = new Date().getFullYear();
+            const vehicleYearDropdown = document.getElementById('vehicle-year');
+            for (let year = 1990; year <= currentYear; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.text = year;
+                vehicleYearDropdown.add(option);
+            }
+        }
+
+        function populateDateDropdown() {
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const currentDay = String(currentDate.getDate()).padStart(2, '0');
+            const formattedDate = `${currentYear}-${currentMonth}-${currentDay}`;
+            const dateDropdown = document.getElementById('datestolen');
+            const option = document.createElement('option');
+            option.value = formattedDate;
+            option.text = formattedDate;
+            dateDropdown.add(option);
+            dateDropdown.value = formattedDate;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            populateVehicleYearDropdown();
+            populateDateDropdown();
             const plateInput = document.getElementById('plate');
             if (plateInput) {
                 plateInput.addEventListener('keydown', preventSpaces);
@@ -584,16 +634,6 @@
                 emailInput.addEventListener('input', () => {
                     emailInput.value = emailInput.value.toUpperCase();
                 });
-            }
-
-            // Populate the vehicle-year dropdown dynamically
-            const currentYear = new Date().getFullYear();
-            const vehicleYearSelect = document.getElementById('vehicle-year');
-            for (let year = 1990; year <= currentYear; year++) {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                vehicleYearSelect.appendChild(option);
             }
         });
     </script>  
