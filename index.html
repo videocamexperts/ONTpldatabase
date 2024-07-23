@@ -522,6 +522,40 @@
             }
         }
 
+        async function removePlateFromDatabase(plate) {
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Sheet1!A2:M',
+                });
+                const rows = response.result.values;
+                const rowIndex = rows.findIndex(row => row[0] === plate);
+                
+                if (rowIndex !== -1) {
+                    const deleteParams = {
+                        spreadsheetId: SPREADSHEET_ID,
+                        range: `Sheet1!A${rowIndex + 2}:M${rowIndex + 2}`,
+                    };
+                    
+                    await gapi.client.sheets.spreadsheets.values.clear(deleteParams);
+                    console.log(`Plate ${plate} removed from Google Sheet.`);
+                    loadPlates();
+                } else {
+                    alert(`Plate ${plate} not found in the database.`);
+                }
+            } catch (error) {
+                console.error('Error:', error.result.error.message);
+            }
+        }
+
+        document.getElementById('remove-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const plate = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+            if (plate) {
+                removePlateFromDatabase(plate);
+            }
+        });
+
         function preventSpaces(event) {
             if (event.key === ' ') {
                 event.preventDefault();
