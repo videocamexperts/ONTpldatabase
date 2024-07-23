@@ -692,7 +692,7 @@
             const removePlateInput = document.getElementById('remove-plate');
             if (removePlateInput) {
                 removePlateInput.addEventListener('input', () => {
-                    removePlateInput.value = removePlateInput.value.replace(/[^A-Z0-9]/g, '').toUpperCase();
+                    removePlateInput.value = removePlateInput.value.replace(/\s+/g, '').toUpperCase();
                 });
                 removePlateInput.addEventListener('keydown', preventSpaces);
             }
