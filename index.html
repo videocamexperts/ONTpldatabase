@@ -56,20 +56,18 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            font-size: 14px;
         }
 
-        .form-group label {
+        .form-group select {
             color: grey;
         }
 
-        ::placeholder {
+        .form-group input::placeholder,
+        .form-group select:invalid {
             color: grey;
-            font-size: 16px;
-        }
-
-        select option {
-            text-transform: uppercase;
         }
 
         button {
@@ -80,7 +78,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         button:hover {
@@ -182,103 +180,63 @@
             <div class="form-group">
                 <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required="">
             </div>
-            <style>
-                select {
-                    -webkit-appearance: menulist-button; /* To disable platform-native styling */
-                    color: black;
-                }
-                select:invalid {
-                    color: grey;
-                }
-            </style>
             <div class="form-group">
-                <label for="datestolen">DATE WHEN PLATE WAS STOLEN:</label>
-                <input type="date" id="datestolen" name="datestolen" placeholder="YYYY-MM-DD" required="">
+                <label for="datestolen" style="color: grey;">DATE WHEN PLATE WAS STOLEN:<input type="date" id="datestolen" name="datestolen" required="" placeholder="DATE WHEN PLATE WAS STOLEN"></label>
             </div>
             <div class="form-group">
                 <select name="police-department" id="department" required="">
                     <option value="">SELECT POLICE SERVICE</option>
-                    <option value="Anishinabek PS">ANISHINABEK POLICE SERVICE</option>
-                    <option value="Barrie PS">BARRIE POLICE SERVICE</option>
-                    <option value="Belleville PS">BELLEVILLE POLICE SERVICE</option>
-                    <option value="Brantford PS">BRANTFORD POLICE SERVICE</option>
-                    <option value="Brockville PS">BROCKVILLE POLICE SERVICE</option>
-                    <option value="Cobourg PS">COBOURG POLICE SERVICE</option>
-                    <option value="Cornwall PS">CORNWALL POLICE SERVICE</option>
-                    <option value="Deep River PS">DEEP RIVER POLICE SERVICE</option>
-                    <option value="Dryden PS">DRYDEN POLICE SERVICE</option>
+                    <option value="ANISHINABEK PS">ANISHINABEK POLICE SERVICE</option>
+                    <option value="BARRIE PS">BARRIE POLICE SERVICE</option>
+                    <option value="BELLEVILLE PS">BELLEVILLE POLICE SERVICE</option>
+                    <option value="BRANTFORD PS">BRANTFORD POLICE SERVICE</option>
+                    <option value="BROCKVILLE PS">BROCKVILLE POLICE SERVICE</option>
+                    <option value="COBOURG PS">COBOURG POLICE SERVICE</option>
+                    <option value="CORNWALL PS">CORNWALL POLICE SERVICE</option>
+                    <option value="DEEP RIVER PS">DEEP RIVER POLICE SERVICE</option>
+                    <option value="DRYDEN PS">DRYDEN POLICE SERVICE</option>
                     <option value="DRPS">DURHAM REGIONAL POLICE SERVICE</option>
-                    <option value="Gananoque PS">GANANOQUE POLICE SERVICE</option>
-                    <option value="Greater Sudbury PS">GREATER SUDBURY POLICE SERVICE</option>
-                    <option value="Guelph PS">GUELPH POLICE SERVICE</option>
-                    <option value="Halton Regional PS">HALTON REGIONAL POLICE SERVICE</option>
-                    <option value="Hamilton PS">HAMILTON POLICE SERVICE</option>
-                    <option value="Hanover PS">HANOVER POLICE SERVICE</option>
-                    <option value="Kawartha Lakes PS">KAWARTHA LAKES POLICE SERVICE</option>
-                    <option value="Kingston PS">KINGSTON POLICE SERVICE</option>
-                    <option value="Lac Seul PS">LAC SEUL POLICE SERVICE</option>
-                    <option value="LaSalle PS">LASALLE POLICE SERVICE</option>
-                    <option value="London PS">LONDON POLICE SERVICE</option>
-                    <option value="Midland PS">MIDLAND POLICE SERVICE</option>
-                    <option value="Nishnawbe-Aski PS">NISHNAWBE-ASKI POLICE SERVICE</option>
+                    <option value="GANANOQUE PS">GANANOQUE POLICE SERVICE</option>
+                    <option value="GREATER SUDBURY PS">GREATER SUDBURY POLICE SERVICE</option>
+                    <option value="GUELPH PS">GUELPH POLICE SERVICE</option>
+                    <option value="HALTON REGIONAL PS">HALTON REGIONAL POLICE SERVICE</option>
+                    <option value="HAMILTON PS">HAMILTON POLICE SERVICE</option>
+                    <option value="HANOVER PS">HANOVER POLICE SERVICE</option>
+                    <option value="KAWARTHA LAKES PS">KAWARTHA LAKES POLICE SERVICE</option>
+                    <option value="KINGSTON PS">KINGSTON POLICE SERVICE</option>
+                    <option value="LAC SEUL PS">LAC SEUL POLICE SERVICE</option>
+                    <option value="LASALLE PS">LASALLE POLICE SERVICE</option>
+                    <option value="LONDON PS">LONDON POLICE SERVICE</option>
+                    <option value="MIDLAND PS">MIDLAND POLICE SERVICE</option>
+                    <option value="NISHNAWBE-ASKI PS">NISHNAWBE-ASKI POLICE SERVICE</option>
                     <option value="NRPS">NIAGARA REGIONAL POLICE SERVICE</option>
-                    <option value="North Bay PS">NORTH BAY POLICE SERVICE</option>
+                    <option value="NORTH BAY PS">NORTH BAY POLICE SERVICE</option>
                     <option value="OPP">ONTARIO PROVINCIAL POLICE</option>
-                    <option value="Orangeville PS">ORANGEVILLE POLICE SERVICE</option>
-                    <option value="Ottawa PS">OTTAWA POLICE SERVICE</option>
-                    <option value="Owen Sound PS">OWEN SOUND POLICE SERVICE</option>
+                    <option value="ORANGEVILLE PS">ORANGEVILLE POLICE SERVICE</option>
+                    <option value="OTTAWA PS">OTTAWA POLICE SERVICE</option>
+                    <option value="OWEN SOUND PS">OWEN SOUND POLICE SERVICE</option>
                     <option value="PRPS">PEEL REGIONAL POLICE SERVICE</option>
-                    <option value="Pembroke PS">PEMBROKE POLICE SERVICE</option>
-                    <option value="Perth PS">PERTH POLICE SERVICE</option>
-                    <option value="Peterborough PS">PETERBOROUGH POLICE SERVICE</option>
+                    <option value="PEMBROKE PS">PEMBROKE POLICE SERVICE</option>
+                    <option value="PERTH PS">PERTH POLICE SERVICE</option>
+                    <option value="PETERBOROUGH PS">PETERBOROUGH POLICE SERVICE</option>
                     <option value="PHPS">PORT HOPE POLICE SERVICE</option>
-                    <option value="Sarnia PS">SARNIA POLICE SERVICE</option>
-                    <option value="Saugeen Shores PS">SAUGEEN SHORES POLICE SERVICE</option>
-                    <option value="Sault Ste. Marie PS">SAULT STE. MARIE POLICE SERVICE</option>
-                    <option value="Six Nations PS">SIX NATIONS POLICE SERVICE</option>
-                    <option value="Smiths Falls PS">SMITHS FALLS POLICE SERVICE</option>
-                    <option value="South Simcoe PS">SOUTH SIMCOE POLICE SERVICE</option>
-                    <option value="St. Thomas PS">ST. THOMAS POLICE SERVICE</option>
-                    <option value="Stratford PS">STRATFORD POLICE SERVICE</option>
-                    <option value="Strathroy-Caradoc PS">STRATHROY-CARADOC POLICE SERVICE</option>
-                    <option value="Thunder Bay PS">THUNDER BAY POLICE SERVICE</option>
-                    <option value="Timmins PS">TIMMINS POLICE SERVICE</option>
+                    <option value="SARNIA PS">SARNIA POLICE SERVICE</option>
+                    <option value="SAUGEEN SHORES PS">SAUGEEN SHORES POLICE SERVICE</option>
+                    <option value="SAULT STE. MARIE PS">SAULT STE. MARIE POLICE SERVICE</option>
+                    <option value="SIX NATIONS PS">SIX NATIONS POLICE SERVICE</option>
+                    <option value="SMITHS FALLS PS">SMITHS FALLS POLICE SERVICE</option>
+                    <option value="SOUTH SIMCOE PS">SOUTH SIMCOE POLICE SERVICE</option>
+                    <option value="ST. THOMAS PS">ST. THOMAS POLICE SERVICE</option>
+                    <option value="STRATFORD PS">STRATFORD POLICE SERVICE</option>
+                    <option value="STRATHROY-CARADOC PS">STRATHROY-CARADOC POLICE SERVICE</option>
+                    <option value="THUNDER BAY PS">THUNDER BAY POLICE SERVICE</option>
+                    <option value="TIMMINS PS">TIMMINS POLICE SERVICE</option>
                     <option value="TPS">TORONTO POLICE SERVICE</option>
-                    <option value="UCCM Anishnaabe PS">UCCM ANISHNAABE POLICE SERVICE</option>
+                    <option value="UCCM ANISHNAABE PS">UCCM ANISHNAABE POLICE SERVICE</option>
                     <option value="WRPS">WATERLOO REGIONAL POLICE SERVICE</option>
-                    <option value="Wikwemikong PS">WIKWEMIKONG TRIBAL POLICE SERVICE</option>
-                    <option value="Windsor PS">WINDSOR POLICE SERVICE</option>
+                    <option value="WIKWEMIKONG PS">WIKWEMIKONG TRIBAL POLICE SERVICE</option>
+                    <option value="WINDSOR PS">WINDSOR POLICE SERVICE</option>
                     <option value="YRP">YORK REGIONAL POLICE</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="text" id="oic" name="oic" placeholder="ENTER PERSON TO NOTIFY - RANK NAME BADGE# OR N/A IF NO O.I.C." required="">
-            </div>
-            <div class="form-group">
-                <input type="text" id="phone" name="phone" placeholder="ENTER PHONE NUMBER OR N/A IF NO O.I.C." required="">
-            </div>
-            <div class="form-group">
-                <input type="text" id="email" name="email" placeholder="ENTER EMAIL OR N/A IF NO O.I.C." required="">
-            </div>
-            <div class="form-group">
-                <select name="plate-status" id="plate-status" required="">
-                    <option value="">REASON FOR INVESTIGATION</option>
-                    <option value="AMBR">AMBER ALERT</option>
-                    <option value="MSPR">MISSING PERSON</option>
-                    <option value="MSPL">MISSING PLATE</option>		   
-                    <option value="STLN">STOLEN VEHICLE/PLATE</option>
-                    <option value="VOI">VEHICLE OF INTEREST</option>
-                    <option value="WNTD">WANTED</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <select name="plate-action" id="plate-action" required="">
-                    <option value="">REQUESTED ACTION</option>
-                    <option value="ID">ATTEMPT TO ID OCCUPANTS - DO NOT DIVULGE</option>
-                    <option value="STOP">ATTEMPT TO LOCATE & STOP</option>
-                    <option value="CALL">CALL BEFORE TAKING ACTION</option>
-                    <option value="FLLW">FOLLOW ONLY DO NOT STOP</option>
-                    <option value="INFO">PLATE HIT INFORMATION ONLY</option>		    
                 </select>
             </div>
             <div class="form-group">
@@ -289,78 +247,83 @@
                 </select>
             </div>
             <div class="form-group">
+                <select name="vehicle-year" id="vehicle-year" required="">
+                    <option value="">SELECT THE YEAR OF VEHICLE</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <select name="vehicle-make" id="vehicle-make" required="">
                     <option value="">SELECT THE MAKE OF VEHICLE OR N/A IF UNATTACHED</option>
-                    <option value="Not Applicable - Unattached">N/A</option>
-                    <option value="Acura">ACURA</option>
-                    <option value="Alfa Romeo">ALFA ROMEO</option>
-                    <option value="Audi">AUDI</option>
+                    <option value="NOT APPLICABLE - UNATTACHED">N/A</option>
+                    <option value="ACURA">ACURA</option>
+                    <option value="ALFA ROMEO">ALFA ROMEO</option>
+                    <option value="AUDI">AUDI</option>
                     <option value="BMW">BMW</option>
-                    <option value="Buick">BUICK</option>
-                    <option value="Cadillac">CADILLAC</option>
-                    <option value="Chevrolet">CHEVROLET</option>
-                    <option value="Chrysler">CHRYSLER</option>
-                    <option value="Dodge">DODGE</option>
-                    <option value="Fiat">FIAT</option>
-                    <option value="Ford">FORD</option>
-                    <option value="Genesis">GENESIS</option>
+                    <option value="BUICK">BUICK</option>
+                    <option value="CADILLAC">CADILLAC</option>
+                    <option value="CHEVROLET">CHEVROLET</option>
+                    <option value="CHRYSLER">CHRYSLER</option>
+                    <option value="DODGE">DODGE</option>
+                    <option value="FIAT">FIAT</option>
+                    <option value="FORD">FORD</option>
+                    <option value="GENESIS">GENESIS</option>
                     <option value="GMC">GMC</option>
-                    <option value="Honda">HONDA</option>
-                    <option value="Hyundai">HYUNDAI</option>
-                    <option value="Infiniti">INFINITI</option>
-                    <option value="Jaguar">JAGUAR</option>
-                    <option value="Jeep">JEEP</option>
-                    <option value="Kia">KIA</option>
-                    <option value="Land Rover">LAND ROVER</option>
-                    <option value="Lexus">LEXUS</option>
-                    <option value="Lincoln">LINCOLN</option>
-                    <option value="Maserati">MASERATI</option>
-                    <option value="Mazda">MAZDA</option>
-                    <option value="Mercedes-Benz">MERCEDES-BENZ</option>
-                    <option value="Mini">MINI</option>
-                    <option value="Mitsubishi">MITSUBISHI</option>
-                    <option value="Nissan">NISSAN</option>
-                    <option value="Porsche">PORSCHE</option>
-                    <option value="Ram">RAM</option>
-                    <option value="Subaru">SUBARU</option>
-                    <option value="Tesla">TESLA</option>
-                    <option value="Toyota">TOYOTA</option>
-                    <option value="Volkswagen">VOLKSWAGEN</option>
-                    <option value="Volvo">VOLVO</option>
+                    <option value="HONDA">HONDA</option>
+                    <option value="HYUNDAI">HYUNDAI</option>
+                    <option value="INFINITI">INFINITI</option>
+                    <option value="JAGUAR">JAGUAR</option>
+                    <option value="JEEP">JEEP</option>
+                    <option value="KIA">KIA</option>
+                    <option value="LAND ROVER">LAND ROVER</option>
+                    <option value="LEXUS">LEXUS</option>
+                    <option value="LINCOLN">LINCOLN</option>
+                    <option value="MASERATI">MASERATI</option>
+                    <option value="MAZDA">MAZDA</option>
+                    <option value="MERCEDES-BENZ">MERCEDES-BENZ</option>
+                    <option value="MINI">MINI</option>
+                    <option value="MITSUBISHI">MITSUBISHI</option>
+                    <option value="NISSAN">NISSAN</option>
+                    <option value="PORSCHE">PORSCHE</option>
+                    <option value="RAM">RAM</option>
+                    <option value="SUBARU">SUBARU</option>
+                    <option value="TESLA">TESLA</option>
+                    <option value="TOYOTA">TOYOTA</option>
+                    <option value="VOLKSWAGEN">VOLKSWAGEN</option>
+                    <option value="VOLVO">VOLVO</option>
                 </select>
             </div>
             <div class="form-group">
                 <select name="vehicle-color" id="vehicle-color" required="">
                     <option value="">SELECT COLOUR OF VEHICLE OR N/A IF UNATTACHED</option>
-                    <option value="Not Applicable - Unattached">N/A</option>
-                    <option value="Beige">BEIGE</option>
-                    <option value="Black">BLACK</option>
-                    <option value="Blue">BLUE</option>
-                    <option value="Brown">BROWN</option>
-                    <option value="Gold">GOLD</option>
-                    <option value="Green">GREEN</option>
-                    <option value="Grey">GREY</option>
-                    <option value="Orange">ORANGE</option>
-                    <option value="Pink">PINK</option>
-                    <option value="Purple">PURPLE</option>
-                    <option value="Red">RED</option>
-                    <option value="Silver">SILVER</option>
-                    <option value="White">WHITE</option>
-                    <option value="Yellow">YELLOW</option>
+                    <option value="NOT APPLICABLE - UNATTACHED">N/A</option>
+                    <option value="BEIGE">BEIGE</option>
+                    <option value="BLACK">BLACK</option>
+                    <option value="BLUE">BLUE</option>
+                    <option value="BROWN">BROWN</option>
+                    <option value="GOLD">GOLD</option>
+                    <option value="GREEN">GREEN</option>
+                    <option value="GREY">GREY</option>
+                    <option value="ORANGE">ORANGE</option>
+                    <option value="PINK">PINK</option>
+                    <option value="PURPLE">PURPLE</option>
+                    <option value="RED">RED</option>
+                    <option value="SILVER">SILVER</option>
+                    <option value="WHITE">WHITE</option>
+                    <option value="YELLOW">YELLOW</option>
                 </select>
             </div>
             <div class="form-group">
                 <select name="vehicle-type" id="vehicle-type" required="">
                     <option value="">SELECT VEHICLE TYPE OR N/A IF UNATTACHED</option>
-                    <option value="Not Applicable - Unattached">N/A</option>
-                    <option value="Car4D">CAR - SEDAN</option>
-                    <option value="CarHB">CAR - HATCHBACK</option>
+                    <option value="NOT APPLICABLE - UNATTACHED">N/A</option>
+                    <option value="CAR4D">CAR - SEDAN</option>
+                    <option value="CARHB">CAR - HATCHBACK</option>
                     <option value="SUV">SUV</option>
-                    <option value="Truck">PICK-UP TRUCK</option>
-                    <option value="Van">VAN</option>
-                    <option value="Motorcycle">MOTORCYCLE</option>
-                    <option value="Trailer">UTILITY TRAILER</option>
-                    <option value="Other">OTHER</option>
+                    <option value="TRUCK">PICK-UP TRUCK</option>
+                    <option value="VAN">VAN</option>
+                    <option value="MOTORCYCLE">MOTORCYCLE</option>
+                    <option value="TRAILER">UTILITY TRAILER</option>
+                    <option value="OTHER">OTHER</option>
                 </select>
             </div>
             <div class="button-group">
@@ -458,8 +421,7 @@
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
                     document.getElementById('remove-plate-button').disabled = true;
-                    const plateList = document.getElementById('plate-list');
-                    plateList.innerHTML = '';
+                    document.getElementById('plate-list').innerHTML = ''; // Clear the plate list
                 });
             }
         }
@@ -484,12 +446,13 @@
             const status = document.getElementById('plate-status').value.trim();
             const action = document.getElementById('plate-action').value.trim();
             const attachment = document.getElementById('plate-attach').value.trim();
+            const year = document.getElementById('vehicle-year').value.trim();
             const make = document.getElementById('vehicle-make').value.trim();
             const color = document.getElementById('vehicle-color').value.trim();
             const type = document.getElementById('vehicle-type').value.trim();
 
             if (plate && !existingPlates.includes(plate)) {
-                addPlateToDatabase({ plate, incident, date, department, oic, phone, email, status, action, attachment, make, color, type });
+                addPlateToDatabase({ plate, incident, date, department, oic, phone, email, status, action, attachment, year, make, color, type });
             } else {
                 alert("Duplicate plate entry. Please enter a unique plate.");
             }
@@ -498,13 +461,13 @@
         async function addPlateToDatabase(plateData) {
             const params = {
                 spreadsheetId: SPREADSHEET_ID,
-                range: 'Sheet1!A2:M',
+                range: 'Sheet1!A2:N',
                 valueInputOption: 'RAW',
             };
 
             const valueRangeBody = {
                 "values": [
-                    [plateData.plate, plateData.incident, plateData.date, plateData.department, plateData.oic, plateData.phone, plateData.email, plateData.status, plateData.action, plateData.attachment, plateData.make, plateData.color, plateData.type]
+                    [plateData.plate, plateData.incident, plateData.date, plateData.department, plateData.oic, plateData.phone, plateData.email, plateData.status, plateData.action, plateData.attachment, plateData.year, plateData.make, plateData.color, plateData.type]
                 ]
             };
 
@@ -522,70 +485,63 @@
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:A',
+                    range: 'Sheet1!A2:N',
                 });
                 console.log('Loaded Plates:', response);
-                existingPlates = response.result.values.flat();
+                existingPlates = response.result.values.map(row => row[0]);
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
-                response.result.values.slice(-10).reverse().forEach((plate, index) => {
-                    if (index >= 0) { // Skip the header row
-                        const li = document.createElement('li');
-                        li.innerHTML = `Plate: ${plate[0]}`;
-                        plateList.appendChild(li);
-                    }
+                const recentPlates = response.result.values.slice(-10).reverse();
+                recentPlates.forEach(plate => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `Plate: ${plate[0]}, Year: ${plate[10]}`;
+                    plateList.appendChild(li);
                 });
             } catch (error) {
                 console.error('Error loading data from Google Sheet:', error);
             }
         }
 
+        document.getElementById('remove-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+            if (plateToRemove) {
+                removePlateFromDatabase(plateToRemove);
+            }
+        });
+
         async function removePlateFromDatabase(plate) {
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:A',
+                    range: 'Sheet1!A2:N',
                 });
                 const rows = response.result.values;
-                let rowIndex = -1;
-                rows.forEach((row, index) => {
-                    if (row[0] === plate) {
-                        rowIndex = index + 2; // Adding 2 to account for 0-based index and header row
-                    }
-                });
-
-                if (rowIndex > -1) {
-                    await gapi.client.sheets.spreadsheets.batchUpdate({
+                const rowIndex = rows.findIndex(row => row[0] === plate);
+                if (rowIndex !== -1) {
+                    const deleteResponse = await gapi.client.sheets.spreadsheets.batchUpdate({
                         spreadsheetId: SPREADSHEET_ID,
                         requests: [{
                             deleteDimension: {
                                 range: {
-                                    sheetId: 0,
-                                    dimension: 'ROWS',
-                                    startIndex: rowIndex - 1,
-                                    endIndex: rowIndex,
+                                    sheetId: response.result.sheets[0].properties.sheetId,
+                                    dimension: "ROWS",
+                                    startIndex: rowIndex + 1,
+                                    endIndex: rowIndex + 2
                                 }
                             }
                         }]
                     });
-                    console.log(`Plate ${plate} removed from Google Sheet`);
+                    console.log('Plate removed from Google Sheet:', deleteResponse);
+                    document.getElementById('remove-form').reset();
                     loadPlates();
                 } else {
-                    alert("Plate not found in the database.");
+                    alert("Plate not found.");
                 }
             } catch (error) {
-                console.error('Error removing plate from Google Sheet:', error);
+                console.error('Error:', error.result.error.message);
             }
         }
-
-        document.getElementById('remove-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const plate = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
-            if (plate) {
-                removePlateFromDatabase(plate);
-                document.getElementById('remove-form').reset();
-            }
-        });
 
         function preventSpaces(event) {
             if (event.key === ' ') {
@@ -628,6 +584,16 @@
                 emailInput.addEventListener('input', () => {
                     emailInput.value = emailInput.value.toUpperCase();
                 });
+            }
+
+            // Populate the vehicle-year dropdown dynamically
+            const currentYear = new Date().getFullYear();
+            const vehicleYearSelect = document.getElementById('vehicle-year');
+            for (let year = 1990; year <= currentYear; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                vehicleYearSelect.appendChild(option);
             }
         });
     </script>  
