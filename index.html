@@ -56,17 +56,20 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 14px;
-            color: black;
+            font-size: 16px;
         }
 
-        .form-group select:invalid {
-            color: grey;
+        .form-group select {
+            color: #999;
         }
 
-        .form-group input::placeholder, 
+        .form-group select option {
+            color: #333;
+        }
+
+        .form-group input::placeholder,
         .form-group select:invalid {
-            color: grey;
+            color: #999;
         }
 
         button {
@@ -161,7 +164,7 @@
             gap: 10px;
         }
 
-        .vehicle-info {
+        .hidden {
             display: none;
         }
 
@@ -177,14 +180,27 @@
         <h2>ADD Licence Plate To Database</h2>
         <form id="add-form">
             <div class="form-group">
-                <input type="text" id="plate" name="plate" placeholder="ENTER LICENCE PLATE NUMBER" required>
+                <input type="text" id="plate" name="plate" onkeydown="preventSpaces(event)" placeholder="ENTER LICENCE PLATE NUMBER" required="">
             </div>
             <div class="form-group">
-                <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required>
+                <input type="text" id="incident" name="incident" placeholder="ENTER OCCURRENCE OR CALL NUMBER" required="">
+            </div>
+            <style>
+                select {
+                    -webkit-appearance: menulist-button; /* To disable platform-native styling */
+                    color: black;
+                }
+                select:invalid {
+                    color: grey;
+                }
+            </style>
+            <div class="form-group">
+                <label for="datestolen" style="color: #999;">DATE WHEN PLATE WAS STOLEN:</label>
+                <input type="date" id="datestolen" name="datestolen" required="" style="color: #999;">
             </div>
             <div class="form-group">
-                <select name="police-department" id="department" required>
-                    <option value="" disabled selected>SELECT POLICE SERVICE</option>
+                <select name="police-department" id="department" required="">
+                    <option value="" selected disabled>SELECT POLICE SERVICE</option>
                     <option value="ANISHINABEK PS">ANISHINABEK POLICE SERVICE</option>
                     <option value="BARRIE PS">BARRIE POLICE SERVICE</option>
                     <option value="BELLEVILLE PS">BELLEVILLE POLICE SERVICE</option>
@@ -239,8 +255,17 @@
                 </select>
             </div>
             <div class="form-group">
-                <select name="plate-status" id="plate-status" required>
-                    <option value="" disabled selected>REASON FOR INVESTIGATION</option>
+                <input type="text" id="oic" name="oic" placeholder="ENTER PERSON TO NOTIFY - RANK NAME BADGE# OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <input type="text" id="phone" name="phone" placeholder="ENTER PHONE NUMBER OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <input type="text" id="email" name="email" placeholder="ENTER EMAIL OR N/A IF NO O.I.C." required="">
+            </div>
+            <div class="form-group">
+                <select name="plate-status" id="plate-status" required="">
+                    <option value="" selected disabled>REASON FOR INVESTIGATION</option>
                     <option value="AMBR">AMBER ALERT</option>
                     <option value="MSPR">MISSING PERSON</option>
                     <option value="MSPL">MISSING PLATE</option>		   
@@ -250,8 +275,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <select name="plate-action" id="plate-action" required>
-                    <option value="" disabled selected>REQUESTED ACTION</option>
+                <select name="plate-action" id="plate-action" required="">
+                    <option value="" selected disabled>REQUESTED ACTION</option>
                     <option value="ID">ATTEMPT TO ID OCCUPANTS - DO NOT DIVULGE</option>
                     <option value="STOP">ATTEMPT TO LOCATE & STOP</option>
                     <option value="CALL">CALL BEFORE TAKING ACTION</option>
@@ -260,26 +285,21 @@
                 </select>
             </div>
             <div class="form-group">
-                <select name="plate-attach" id="plate-attach" required>
-                    <option value="" disabled selected>INDICATE IF THE PLATE IS ATTACHED TO A VEHICLE OR UNATTACHED</option>
+                <select name="plate-attach" id="plate-attach" required="">
+                    <option value="" selected disabled>INDICATE IF THE PLATE IS ATTACHED TO A VEHICLE OR UNATTACHED</option>
                     <option value="ATCH">ATTACHED PLATE</option>
                     <option value="UNAT">UNATTACHED PLATE</option>
                 </select>
             </div>
-            <div class="form-group vehicle-info">
-                <select name="vehicle-year" id="vehicle-year" required>
-                    <option value="" disabled selected>SELECT THE YEAR OF VEHICLE</option>
-                    <script>
-                        let year = new Date().getFullYear();
-                        for (let i = 1990; i <= year; i++) {
-                            document.write(`<option value="${i}">${i}</option>`);
-                        }
-                    </script>
+            <div class="form-group hidden" id="vehicle-year-group">
+                <select name="vehicle-year" id="vehicle-year">
+                    <option value="" selected disabled>SELECT THE YEAR OF VEHICLE</option>
                 </select>
             </div>
-            <div class="form-group vehicle-info">
-                <select name="vehicle-make" id="vehicle-make" required>
-                    <option value="" disabled selected>SELECT THE MAKE OF VEHICLE</option>
+            <div class="form-group hidden" id="vehicle-make-group">
+                <select name="vehicle-make" id="vehicle-make">
+                    <option value="" selected disabled>SELECT THE MAKE OF VEHICLE OR N/A IF UNATTACHED</option>
+                    <option value="NOT APPLICABLE - UNATTACHED">N/A</option>
                     <option value="ACURA">ACURA</option>
                     <option value="ALFA ROMEO">ALFA ROMEO</option>
                     <option value="AUDI">AUDI</option>
@@ -317,9 +337,10 @@
                     <option value="VOLVO">VOLVO</option>
                 </select>
             </div>
-            <div class="form-group vehicle-info">
-                <select name="vehicle-color" id="vehicle-color" required>
-                    <option value="" disabled selected>SELECT COLOUR OF VEHICLE</option>
+            <div class="form-group hidden" id="vehicle-color-group">
+                <select name="vehicle-color" id="vehicle-color">
+                    <option value="" selected disabled>SELECT COLOUR OF VEHICLE OR N/A IF UNATTACHED</option>
+                    <option value="NOT APPLICABLE - UNATTACHED">N/A</option>
                     <option value="BEIGE">BEIGE</option>
                     <option value="BLACK">BLACK</option>
                     <option value="BLUE">BLUE</option>
@@ -336,9 +357,10 @@
                     <option value="YELLOW">YELLOW</option>
                 </select>
             </div>
-            <div class="form-group vehicle-info">
-                <select name="vehicle-type" id="vehicle-type" required>
-                    <option value="" disabled selected>SELECT VEHICLE TYPE</option>
+            <div class="form-group hidden" id="vehicle-type-group">
+                <select name="vehicle-type" id="vehicle-type">
+                    <option value="" selected disabled>SELECT VEHICLE TYPE OR N/A IF UNATTACHED</option>
+                    <option value="NOT APPLICABLE - UNATTACHED">N/A</option>
                     <option value="CAR4D">CAR - SEDAN</option>
                     <option value="CARHB">CAR - HATCHBACK</option>
                     <option value="SUV">SUV</option>
@@ -347,28 +369,6 @@
                     <option value="MOTORCYCLE">MOTORCYCLE</option>
                     <option value="TRAILER">UTILITY TRAILER</option>
                     <option value="OTHER">OTHER</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="text" id="oic" name="oic" placeholder="ENTER PERSON TO NOTIFY - RANK NAME BADGE# OR N/A IF NO O.I.C." required>
-            </div>
-            <div class="form-group">
-                <input type="text" id="phone" name="phone" placeholder="ENTER PHONE NUMBER OR N/A IF NO O.I.C." required>
-            </div>
-            <div class="form-group">
-                <input type="text" id="email" name="email" placeholder="ENTER EMAIL OR N/A IF NO O.I.C." required>
-            </div>
-            <div class="form-group">
-                <select name="date" id="date" required>
-                    <option value="" disabled selected>DATE WHEN PLATE OR VEHICLE WAS STOLEN</option>
-                    <script>
-                        let today = new Date();
-                        let dd = String(today.getDate()).padStart(2, '0');
-                        let mm = String(today.getMonth() + 1).padStart(2, '0');
-                        let yyyy = today.getFullYear();
-                        today = yyyy + '-' + mm + '-' + dd;
-                        document.write(`<option value="${today}">${today}</option>`);
-                    </script>
                 </select>
             </div>
             <div class="button-group">
@@ -381,7 +381,7 @@
         <h2 class="remove-title">REMOVE Licence Plate From Database</h2>
         <form id="remove-form">
             <div class="form-group">
-                <input type="text" name="remove-plate" placeholder="ENTER LICENCE PLATE NUMBER TO BE REMOVED" required>
+                <input type="text" name="remove-plate" placeholder="ENTER LICENCE PLATE NUMBER TO BE REMOVED" required="">
             </div>
             <div class="form-group">
                 <button type="submit" class="remove-button" id="remove-plate-button" disabled>Remove Licence Plate</button>
@@ -466,7 +466,7 @@
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
                     document.getElementById('remove-plate-button').disabled = true;
-                    document.getElementById('plate-list').innerHTML = ''; // Clear the plate list on sign out
+                    document.getElementById('plate-list').innerHTML = '';
                 });
             }
         }
@@ -477,13 +477,34 @@
         window.addEventListener('load', () => {
             gapi.load('client', initializeGapiClient);
             gisLoaded();
+            populateVehicleYears();
+        });
+
+        document.getElementById('plate-attach').addEventListener('change', function() {
+            const value = this.value;
+            const vehicleYearGroup = document.getElementById('vehicle-year-group');
+            const vehicleMakeGroup = document.getElementById('vehicle-make-group');
+            const vehicleColorGroup = document.getElementById('vehicle-color-group');
+            const vehicleTypeGroup = document.getElementById('vehicle-type-group');
+            
+            if (value === 'ATCH') {
+                vehicleYearGroup.classList.remove('hidden');
+                vehicleMakeGroup.classList.remove('hidden');
+                vehicleColorGroup.classList.remove('hidden');
+                vehicleTypeGroup.classList.remove('hidden');
+            } else {
+                vehicleYearGroup.classList.add('hidden');
+                vehicleMakeGroup.classList.add('hidden');
+                vehicleColorGroup.classList.add('hidden');
+                vehicleTypeGroup.classList.add('hidden');
+            }
         });
 
         document.getElementById('add-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const plate = document.getElementById('plate').value.trim().toUpperCase();
             const incident = document.getElementById('incident').value.trim();
-            const date = document.getElementById('date').value.trim();
+            const date = document.getElementById('datestolen').value.trim();
             const department = document.getElementById('department').value.trim();
             const oic = document.getElementById('oic').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -491,13 +512,13 @@
             const status = document.getElementById('plate-status').value.trim();
             const action = document.getElementById('plate-action').value.trim();
             const attachment = document.getElementById('plate-attach').value.trim();
+            const year = document.getElementById('vehicle-year').value.trim();
             const make = document.getElementById('vehicle-make').value.trim();
             const color = document.getElementById('vehicle-color').value.trim();
             const type = document.getElementById('vehicle-type').value.trim();
-            const year = document.getElementById('vehicle-year').value.trim();
 
             if (plate && !existingPlates.includes(plate)) {
-                addPlateToDatabase({ plate, incident, date, department, oic, phone, email, status, action, attachment, make, color, type, year });
+                addPlateToDatabase({ plate, incident, date, department, oic, phone, email, status, action, attachment, year, make, color, type });
             } else {
                 alert("Duplicate plate entry. Please enter a unique plate.");
             }
@@ -506,13 +527,13 @@
         async function addPlateToDatabase(plateData) {
             const params = {
                 spreadsheetId: SPREADSHEET_ID,
-                range: 'Sheet1!A2:M',
+                range: 'Sheet1!A2:N',
                 valueInputOption: 'RAW',
             };
 
             const valueRangeBody = {
                 "values": [
-                    [plateData.plate, plateData.incident, plateData.date, plateData.department, plateData.oic, plateData.phone, plateData.email, plateData.status, plateData.action, plateData.attachment, plateData.make, plateData.color, plateData.type, plateData.year]
+                    [plateData.plate, plateData.incident, plateData.date, plateData.department, plateData.oic, plateData.phone, plateData.email, plateData.status, plateData.action, plateData.attachment, plateData.year, plateData.make, plateData.color, plateData.type]
                 ]
             };
 
@@ -520,27 +541,37 @@
                 const response = await gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
                 console.log('Plate added to Google Sheet:', response);
                 document.getElementById('add-form').reset();
-                document.getElementById('plate-attach').value = '';
-                document.querySelectorAll('.vehicle-info').forEach(element => element.style.display = 'none');
+                hideVehicleFields();
                 loadPlates();
             } catch (error) {
                 console.error('Error:', error.result.error.message);
             }
         }
 
+        function hideVehicleFields() {
+            const vehicleYearGroup = document.getElementById('vehicle-year-group');
+            const vehicleMakeGroup = document.getElementById('vehicle-make-group');
+            const vehicleColorGroup = document.getElementById('vehicle-color-group');
+            const vehicleTypeGroup = document.getElementById('vehicle-type-group');
+            vehicleYearGroup.classList.add('hidden');
+            vehicleMakeGroup.classList.add('hidden');
+            vehicleColorGroup.classList.add('hidden');
+            vehicleTypeGroup.classList.add('hidden');
+        }
+
         async function loadPlates() {
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:A',
+                    range: 'Sheet1!A2:N',
                 });
                 console.log('Loaded Plates:', response);
-                existingPlates = response.result.values.flat();
+                existingPlates = response.result.values.flatMap(row => row[0]);
                 const plateList = document.getElementById('plate-list');
                 plateList.innerHTML = '';
-                response.result.values.slice(-10).reverse().forEach((plate, index) => {
+                response.result.values.slice(-10).reverse().forEach((plate) => {
                     const li = document.createElement('li');
-                    li.innerHTML = `Plate: ${plate[0]}`;
+                    li.innerHTML = `Plate: ${plate[0]}, Date: ${plate[2]}, Make: ${plate[11] || 'N/A'}, Color: ${plate[12] || 'N/A'}, Type: ${plate[13] || 'N/A'}`;
                     plateList.appendChild(li);
                 });
             } catch (error) {
@@ -550,38 +581,60 @@
 
         document.getElementById('remove-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const removePlate = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
-            if (!removePlate) return;
+            const plateToRemove = document.querySelector('input[name="remove-plate"]').value.trim().toUpperCase();
+            if (existingPlates.includes(plateToRemove)) {
+                await removePlateFromDatabase(plateToRemove);
+                loadPlates();
+                document.getElementById('remove-form').reset();
+            } else {
+                alert("Plate not found. Please enter a valid plate number.");
+            }
+        });
 
+        async function removePlateFromDatabase(plate) {
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Sheet1!A2:M',
+                    range: 'Sheet1!A2:N',
                 });
-
                 const rows = response.result.values;
-                const rowIndex = rows.findIndex(row => row[0] === removePlate);
+                const rowIndex = rows.findIndex(row => row[0] === plate);
 
                 if (rowIndex !== -1) {
-                    const range = `Sheet1!A${rowIndex + 2}:M${rowIndex + 2}`;
-                    await gapi.client.sheets.spreadsheets.values.clear({
+                    await gapi.client.sheets.spreadsheets.batchUpdate({
                         spreadsheetId: SPREADSHEET_ID,
-                        range: range,
+                        requests: [{
+                            deleteDimension: {
+                                range: {
+                                    sheetId: 0,
+                                    dimension: "ROWS",
+                                    startIndex: rowIndex + 1,
+                                    endIndex: rowIndex + 2
+                                }
+                            }
+                        }]
                     });
-                    alert(`Plate ${removePlate} removed successfully.`);
-                    document.getElementById('remove-form').reset();
-                    loadPlates();
-                } else {
-                    alert(`Plate ${removePlate} not found.`);
+                    console.log('Plate removed from Google Sheet');
                 }
             } catch (error) {
-                console.error('Error removing plate:', error);
+                console.error('Error removing data from Google Sheet:', error);
             }
-        });
+        }
 
         function preventSpaces(event) {
             if (event.key === ' ') {
                 event.preventDefault();
+            }
+        }
+
+        function populateVehicleYears() {
+            const vehicleYearSelect = document.getElementById('vehicle-year');
+            const currentYear = new Date().getFullYear();
+            for (let year = 1990; year <= currentYear; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                vehicleYearSelect.appendChild(option);
             }
         }
 
@@ -590,7 +643,7 @@
             if (plateInput) {
                 plateInput.addEventListener('keydown', preventSpaces);
                 plateInput.addEventListener('input', () => {
-                    plateInput.value = plateInput.value.replace(/[^A-Z0-9]/g, '').toUpperCase();
+                    plateInput.value = plateInput.value.replace(/\s+/g, '').toUpperCase();
                 });
             }
 
@@ -611,34 +664,14 @@
             const phoneInput = document.getElementById('phone');
             if (phoneInput) {
                 phoneInput.addEventListener('input', () => {
-                    phoneInput.value = phoneInput.value.replace(/[^0-9-]/g, '');
+                    phoneInput.value = phoneInput.value.toUpperCase();
                 });
             }
 
             const emailInput = document.getElementById('email');
             if (emailInput) {
                 emailInput.addEventListener('input', () => {
-                    emailInput.value = emailInput.value.toLowerCase();
-                });
-            }
-
-            const removePlateInput = document.querySelector('input[name="remove-plate"]');
-            if (removePlateInput) {
-                removePlateInput.addEventListener('keydown', preventSpaces);
-                removePlateInput.addEventListener('input', () => {
-                    removePlateInput.value = removePlateInput.value.replace(/[^A-Z0-9]/g, '').toUpperCase();
-                });
-            }
-
-            const plateAttachSelect = document.getElementById('plate-attach');
-            if (plateAttachSelect) {
-                plateAttachSelect.addEventListener('change', () => {
-                    const vehicleInfo = document.querySelectorAll('.vehicle-info');
-                    if (plateAttachSelect.value === 'ATCH') {
-                        vehicleInfo.forEach(element => element.style.display = 'block');
-                    } else {
-                        vehicleInfo.forEach(element => element.style.display = 'none');
-                    }
+                    emailInput.value = emailInput.value.toUpperCase();
                 });
             }
         });
