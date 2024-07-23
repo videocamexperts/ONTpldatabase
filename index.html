@@ -138,10 +138,15 @@
             background-color: #c82333;
         }
 
-        #add-plate-button:disabled,
-        .remove-button:disabled {
+        #add-plate-button:disabled {
             background-color: #d3d3d3;
             cursor: not-allowed;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
         }
 
     </style>
@@ -390,12 +395,12 @@
             const authorizeButton = document.getElementById('authorize-button');
             const signoutButton = document.getElementById('signout-button');
             const addPlateButton = document.getElementById('add-plate-button');
-            const removePlateButton = document.querySelector('.remove-button');
+            const removeButton = document.querySelector('.remove-button');
             
-            if (authorizeButton && signoutButton && addPlateButton && removePlateButton && gapiInited && gisInited) {
+            if (authorizeButton && signoutButton && addPlateButton && removeButton && gapiInited && gisInited) {
                 authorizeButton.style.display = 'block';
                 addPlateButton.disabled = true;
-                removePlateButton.disabled = true;
+                removeButton.disabled = true;
             }
         }
 
