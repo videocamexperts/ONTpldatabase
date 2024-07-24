@@ -731,7 +731,10 @@ ul li {
 
         populateVehicleYears();
 
-        const selectElement = document.querySelector('#vehicle-year');
+       const selects = ['#vehicle-year', '#vehicle-make', '#vehicle-color', '#vehicle-type'];
+
+    selects.forEach(selectId => {
+        const selectElement = document.querySelector(selectId);
         if (selectElement.value === '') {
             selectElement.classList.add('no-selection');
         }
@@ -744,11 +747,12 @@ ul li {
             }
         });
     });
+});
 
-    window.addEventListener('load', () => {
-        gapi.load('client', initializeGapiClient);
-        gisLoaded();
-    });
+window.addEventListener('load', () => {
+    gapi.load('client', initializeGapiClient);
+    gisLoaded();
+});
 </script>
         <footer> </footer>
         <div class="footer">
