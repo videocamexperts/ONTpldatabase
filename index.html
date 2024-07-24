@@ -202,10 +202,18 @@
             display: none;
         }
 
-        select option[value=""][disabled] {
-            color: #999; /* Change this to the desired placeholder color */
+        .form-group.hidden select.no-selection {
+            color: #999; /* Change to your desired placeholder color */
         }
-    </style>
+
+        .form-group.hidden select option {
+            color: #000; /* Change to your desired color for selected options */
+        }
+
+        .form-group.hidden select option[value=""] {
+            color: #999; /* Match the placeholder color */
+        }
+</style>
 </head>
 <body>
     <div class="container">
@@ -328,7 +336,7 @@
                 </select>
             </div>
             <div class="form-group hidden" id="vehicle-year-group">
-                <select name="vehicle-year" id="vehicle-year">
+                <select name="vehicle-year" id="vehicle-year" class="no-selection">
                     <option value="" selected disabled>SELECT THE YEAR OF VEHICLE</option>
                 </select>
             </div>
@@ -731,6 +739,23 @@
                 removePlateInput.addEventListener('keydown', preventSpaces);
             }
         });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    const selectElement = document.querySelector('#vehicle-year');
+
+    // Check the initial state
+    if (selectElement.value === '') {
+        selectElement.classList.add('no-selection');
+    }
+
+    selectElement.addEventListener('change', function() {
+        if (selectElement.value === '') {
+            selectElement.classList.add('no-selection');
+        } else {
+            selectElement.classList.remove('no-selection');
+        }
+    });
+});
     </script> 
         <footer> </footer>
         <div class="footer">
