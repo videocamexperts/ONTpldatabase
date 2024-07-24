@@ -91,18 +91,24 @@
     color: #000;
 }
 
-.form-group select option {
-    color: #000;
+.form-group select.no-selection {
+    color: #999; /* Placeholder color */
 }
 
-.form-group input::placeholder,
 .form-group select:invalid {
     color: #999;
 }
 
-.form-group.hidden input::placeholder,
-.form-group.hidden select:invalid {
+.form-group input::placeholder {
     color: #999;
+}
+
+.form-group select option {
+    color: #000; /* Normal option color */
+}
+
+.form-group select option[value=""] {
+    color: #999; /* Placeholder option color */
 }
 
 button {
@@ -203,19 +209,6 @@ ul li {
     display: none;
 }
 
-.form-group.hidden select.no-selection {
-    color: #999; /* Change to your desired placeholder color */
-}
-
-/* Selected options color inside hidden form-groups */
-.form-group.hidden select option {
-    color: #000; /* Change to your desired color for selected options */
-}
-
-/* Placeholder option color inside hidden form-groups */
-.form-group.hidden select option[value=""] {
-    color: #999; /* Match the placeholder color */
-}
 </style>
 </head>
 <body>
