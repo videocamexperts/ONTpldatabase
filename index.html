@@ -652,9 +652,19 @@ ul li {
                 oicInput.value = oicInput.value.toUpperCase();
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const phoneInput = document.getElementById('phone');
+        
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.addEventListener('input', () => {
+                emailInput.value = emailInput.value.toUpperCase();
+                emailInput.setCustomValidity('');
+                if (!/^[\w\.\-]+@[a-zA-Z\d\.\-]+\.[a-zA-Z]{2,}$/.test(emailInput.value)) {
+                    emailInput.setCustomValidity('Please enter a valid email address.');
+                }
+            });
+        }
+        
+        const phoneInput = document.getElementById('phone');
             if (phoneInput) {
                 phoneInput.addEventListener('input', () => {
                     let value = phoneInput.value.replace(/\D/g, ''); // Remove all non-digit characters
@@ -669,22 +679,11 @@ ul li {
                 phoneInput.addEventListener('keydown', (event) => {
                     // Allow only numbers and control keys
                     const key = event.key;
-                    if (!/[0-9\-]/.test(key) && key !== 'Backspace' && key !== 'Tab' && key !== 'ArrowLeft' && key !== 'ArrowRight') {
+                    if (!/[0-9]/.test(key) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(key)) {
                         event.preventDefault();
                     }
                 });
-        }
-
-        const emailInput = document.getElementById('email');
-        if (emailInput) {
-            emailInput.addEventListener('input', () => {
-                emailInput.value = emailInput.value.toUpperCase();
-                emailInput.setCustomValidity('');
-                if (!/^[\w\.\-]+@[a-zA-Z\d\.\-]+\.[a-zA-Z]{2,}$/.test(emailInput.value)) {
-                    emailInput.setCustomValidity('Please enter a valid email address.');
-                }
-            });
-        }
+            }
 
         const removePlateInput = document.getElementById('remove-plate');
         if (removePlateInput) {
