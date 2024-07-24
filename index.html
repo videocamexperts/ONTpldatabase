@@ -445,7 +445,7 @@ ul li {
             </div>
         </form>
         <div class="spacer"></div>
-        <h2>Recently Added Plates</h2>
+        <h2><div ID="recently-added">Recently Added Plates</h2>
         <ul id="plate-list"></ul>
 
         <div class="spacer"></div>
@@ -505,7 +505,7 @@ ul li {
                 document.getElementById('add-plate-button').disabled = false;
                 document.getElementById('remove-plate-button').disabled = false;
                 loadPlates();
-                document.getElementById('recently-added-heading').style.display = 'block';
+                document.getElementById('recently-added').style.display = 'block';
             };
 
             if (gapi.client.getToken() === null) {
@@ -524,6 +524,7 @@ ul li {
                     document.getElementById('signout-button').style.display = 'none';
                     document.getElementById('add-plate-button').disabled = true;
                     document.getElementById('remove-plate-button').disabled = true;
+                    document.getElementById('recently-added').style.display = 'none';
                     document.getElementById('plate-list').innerHTML = '';
                 });
             }
