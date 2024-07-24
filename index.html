@@ -203,15 +203,17 @@ ul li {
     display: none;
 }
 
-.form-group select.no-selection {
+.form-group.hidden select.no-selection {
     color: #999; /* Change to your desired placeholder color */
 }
 
-.form-group select option {
+/* Selected options color inside hidden form-groups */
+.form-group.hidden select option {
     color: #000; /* Change to your desired color for selected options */
 }
 
-.form-group select option[value=""] {
+/* Placeholder option color inside hidden form-groups */
+.form-group.hidden select option[value=""] {
     color: #999; /* Match the placeholder color */
 }
 </style>
