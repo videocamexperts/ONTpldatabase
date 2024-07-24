@@ -52,9 +52,6 @@
         }
         
         .header h1 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             text-align: center;
             width: 100%;
         }
@@ -73,42 +70,40 @@
             text-align: center;
             width: 100%;
         }
-    
-        .form-group {
-            padding: 10px;
-            padding-top: 0px;
-            margin-bottom: 0px;
-        }
 
-        .form-group input, 
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+.form-group {
+    padding: 0 10px 10px 10px; /* Adjusted padding shorthand */
+    margin-bottom: 0;
+}
 
-        .form-group select {
-            color: #000000;
-        }
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
 
-        .form-group select option {
-            color: #000000;
-        }
+.form-group select {
+    color: #000;
+}
 
-        .form-group input::placeholder,
-        .form-group select:invalid {
-            color: #999;
-        }
+.form-group select option {
+    color: #000;
+}
 
-        .form-group hidden input::placeholder,
-        .form-group hidden select:invalid {
-            color: #999;
-        }
-        
+.form-group input::placeholder,
+.form-group select:invalid {
+    color: #999;
+}
+
+.form-group .hidden input::placeholder,
+.form-group .hidden select:invalid {
+    color: #999;
+}
         button {
             background-color: #1e73be;
             color: #fff;
