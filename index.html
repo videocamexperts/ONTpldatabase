@@ -653,17 +653,26 @@ ul li {
             });
         }
 
-        const phoneInput = document.getElementById('phone');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', () => {
-                phoneInput.value = phoneInput.value.replace(/\D+/g, '');
-            });
-            phoneInput.addEventListener('keydown', (event) => {
-                const key = event.key;
-                if (!/[0-9\-]/.test(key) && key !== 'Backspace' && key !== 'Tab' && key !== 'ArrowLeft' && key !== 'ArrowRight') {
-                    event.preventDefault();
-                }
-            });
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', () => {
+                    let value = phoneInput.value.replace(/\D/g, ''); // Remove all non-digit characters
+                    if (value.length > 3 && value.length <= 6) {
+                        value = `${value.slice(0, 3)}-${value.slice(3)}`;
+                    } else if (value.length > 6) {
+                        value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                    }
+                    phoneInput.value = value;
+                });
+
+                phoneInput.addEventListener('keydown', (event) => {
+                    // Allow only numbers and control keys
+                    const key = event.key;
+                    if (!/[0-9\-]/.test(key) && key !== 'Backspace' && key !== 'Tab' && key !== 'ArrowLeft' && key !== 'ArrowRight') {
+                        event.preventDefault();
+                    }
+                });
         }
 
         const emailInput = document.getElementById('email');
